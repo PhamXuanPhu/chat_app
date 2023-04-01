@@ -16,21 +16,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final controllerUserNameLogin = TextEditingController();
-  final controllerPasswordLogin = TextEditingController();
-  final controllerUserNameRegister = TextEditingController();
-  final controllerPasswordRegister = TextEditingController();
-  final controllerConfirmPasswordRegister = TextEditingController();
   bool? isRemember = false;
   bool isLogin = true;
 
   @override
   void initState() {
-    controllerUserNameLogin.addListener(() => setState(() {}));
-    controllerPasswordLogin.addListener(() => setState(() {}));
-    controllerUserNameRegister.addListener(() => setState(() {}));
-    controllerPasswordRegister.addListener(() => setState(() {}));
-    controllerConfirmPasswordRegister.addListener(() => setState(() {}));
     super.initState();
   }
 
@@ -82,17 +72,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        TextFiledUserName(
-                          hintText: "User name",
-                          controller: controllerUserNameLogin,
-                        ),
+                        # TextFiledUserName(hintText:"fdfsd",onChanged:(newString)=>{
+                        #   print(newString)
+                        # }),
                         const SizedBox(
                           height: 10,
                         ),
-                        TextFiledPassword(
-                          hintText: 'Password',
-                          controller: controllerPasswordLogin,
-                        ),
+                        # TextFiledPassword(
+                        #   hintText: 'Password',
+                        #   controller: controllerPasswordLogin,
+                        # ),
                         const SizedBox(
                           height: 20,
                         ),
@@ -196,24 +185,24 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        TextFiledUserName(
-                          hintText: "User name",
-                          controller: controllerUserNameRegister,
-                        ),
+                        # TextFiledUserName(
+                        #   hintText: "User name",
+                        #   controller: controllerUserNameRegister,
+                        # ),
                         const SizedBox(
                           height: 10,
                         ),
-                        TextFiledPassword(
-                          hintText: 'Password',
-                          controller: controllerPasswordRegister,
-                        ),
+                        # TextFiledPassword(
+                        #   hintText: 'Password',
+                        #   controller: controllerPasswordRegister,
+                        # ),
                         const SizedBox(
                           height: 10,
                         ),
-                        TextFiledPassword(
-                          hintText: 'Confirm password',
-                          controller: controllerConfirmPasswordRegister,
-                        ),
+                        # TextFiledPassword(
+                        #   hintText: 'Confirm password',
+                        #   controller: controllerConfirmPasswordRegister,
+                        # ),
                         const SizedBox(
                           height: 20,
                         ),

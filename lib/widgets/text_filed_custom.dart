@@ -2,28 +2,34 @@ import 'package:flutter/material.dart';
 import '../resources/colors.dart';
 
 class TextFiledUserName extends StatefulWidget {
-  const TextFiledUserName(
-      {Key? key, required this.hintText, required this.controller})
+   const TextFiledUserName(
+      {Key? key, required this.hintText, required this.onChanged, this.text})
       : super(key: key);
 
   final String hintText;
-  final TextEditingController controller;
+  final Function(String) onChanged;
+  final String? text;
   @override
   State<TextFiledUserName> createState() => _TextFiledUserNameState();
 }
 
 class _TextFiledUserNameState extends State<TextFiledUserName> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   widget.controller.addListener(() => setState(() {}));
-  // }
+  final controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(() => setState(() {}));
+    if (widget.text != null && widget.text!.isNotEmpty) {
+      controller.text = widget.text!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       textAlignVertical: TextAlignVertical.center,
-      controller: widget.controller,
+      controller: controller,
       keyboardType: TextInputType.emailAddress,
       style: const TextStyle(
         fontSize: 15,
@@ -37,10 +43,10 @@ class _TextFiledUserNameState extends State<TextFiledUserName> {
             color: colorWhite,
             size: 20,
           ),
-          suffixIcon: widget.controller.text.isEmpty
+          suffixIcon: controller.text.isEmpty
               ? null
               : IconButton(
-                  onPressed: () => {widget.controller.clear()},
+                  onPressed: () => {controller.clear()},
                   icon: const Icon(
                     Icons.clear_outlined,
                     color: colorWhite,
@@ -60,8 +66,6 @@ class _TextFiledUserNameState extends State<TextFiledUserName> {
               borderSide: const BorderSide(color: colorWhite),
               borderRadius: BorderRadius.circular(10)),
           border: OutlineInputBorder(
-
-              /// thay đổi border
               borderSide: const BorderSide(color: colorWhite),
               borderRadius: BorderRadius.circular(10))),
       maxLines: 1,
@@ -71,23 +75,34 @@ class _TextFiledUserNameState extends State<TextFiledUserName> {
 
 class TextFiledPassword extends StatefulWidget {
   const TextFiledPassword(
-      {Key? key, required this.hintText, required this.controller})
+      {Key? key, required this.hintText, required this.onChanged, this.text})
       : super(key: key);
 
   final String hintText;
-  final TextEditingController controller;
+  final Function(String) onChanged;
+  final String? text;
   @override
   State<TextFiledPassword> createState() => _TextFiledPasswordState();
 }
 
 class _TextFiledPasswordState extends State<TextFiledPassword> {
   bool enableIsPassword = true;
+  final controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(() => setState(() {}));
+    if (widget.text != null && widget.text!.isNotEmpty) {
+      controller.text = widget.text!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       textAlignVertical: TextAlignVertical.center,
-      controller: widget.controller,
+      controller: controller,
       keyboardType: TextInputType.emailAddress,
 
       /// thay đổi kiểu của password
@@ -110,7 +125,7 @@ class _TextFiledPasswordState extends State<TextFiledPassword> {
             color: colorWhite,
             size: 20,
           ),
-          suffixIcon: widget.controller.text.isEmpty
+          suffixIcon: controller.text.isEmpty
               ? null
               : IconButton(
                   icon: enableIsPassword
