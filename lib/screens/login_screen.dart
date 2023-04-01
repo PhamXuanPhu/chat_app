@@ -1,6 +1,9 @@
+import 'dart:math';
 import 'dart:ui';
 
+import 'package:chat_app/api/firebase.dart';
 import 'package:chat_app/resources/colors.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
@@ -18,6 +21,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool? isRemember = false;
   bool isLogin = true;
+  String email = "";
+  String password = "";
+  String confrimPassword = "12345";
+  String confrimPassword1 = "";
+  String confrimPassword2 = "";
 
   @override
   void initState() {
@@ -45,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
         alignment: Alignment.bottomCenter,
       ));
 
-  // form login
+  //form login
   Widget loginForm(BuildContext context) => Center(
       child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
@@ -72,16 +80,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        # TextFiledUserName(hintText:"fdfsd",onChanged:(newString)=>{
-                        #   print(newString)
-                        # }),
+                        TextFiledUserName(
+                            hintText: "User Name",
+                            onChanged: (newString) =>
+                                {print(newString), email = newString}),
                         const SizedBox(
                           height: 10,
                         ),
-                        # TextFiledPassword(
-                        #   hintText: 'Password',
-                        #   controller: controllerPasswordLogin,
-                        # ),
+                        TextFiledPassword(
+                          hintText: 'Password',
+                          onChanged: (value) => {confrimPassword = value},
+                          text: confrimPassword,
+                        ),
                         const SizedBox(
                           height: 20,
                         ),
@@ -124,8 +134,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        buttonCustom('Login', () async {},
-                            style: ButtonStyleCustom.white),
+                        buttonCustom('Login', () async {
+                          bool isLogin =
+                              await FirebaseAPI.login(email, password);
+                          if (isLogin) {
+                            print('login');
+                          } else {
+                            print('login fail');
+                          }
+                        }, style: ButtonStyleCustom.white),
                         const SizedBox(
                           height: 20,
                         ),
@@ -137,10 +154,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: TextStyle(color: colorWhite, fontSize: 14),
                             ),
                             InkWell(
-                              onTap: () {
+                              onTap: () async {
                                 setState(() {
                                   isLogin = false;
                                 });
+                                await Future.delayed(
+                                    const Duration(microseconds: 150));
                               },
                               child: const Text(
                                 ' Register',
@@ -185,24 +204,26 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        # TextFiledUserName(
-                        #   hintText: "User name",
-                        #   controller: controllerUserNameRegister,
-                        # ),
+                        TextFiledUserName(
+                          hintText: "User name",
+                          onChanged: (newString) => {},
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
-                        # TextFiledPassword(
-                        #   hintText: 'Password',
-                        #   controller: controllerPasswordRegister,
-                        # ),
+                        TextFiledPassword(
+                          hintText: 'Password2',
+                          onChanged: (value) => {confrimPassword1 = value},
+                          text: confrimPassword1,
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
-                        # TextFiledPassword(
-                        #   hintText: 'Confirm password',
-                        #   controller: controllerConfirmPasswordRegister,
-                        # ),
+                        TextFiledPassword(
+                          hintText: 'Confirm password',
+                          onChanged: (value) => {confrimPassword2 = value},
+                          text: confrimPassword2,
+                        ),
                         const SizedBox(
                           height: 20,
                         ),
@@ -212,10 +233,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 20,
                         ),
                         InkWell(
-                          onTap: () {
+                          onTap: () async {
                             setState(() {
                               isLogin = true;
                             });
+                            await Future.delayed(
+                                const Duration(microseconds: 150));
                           },
                           child: const Text(
                             'Have an account',

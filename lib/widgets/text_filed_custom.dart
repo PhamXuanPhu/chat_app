@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../resources/colors.dart';
 
 class TextFiledUserName extends StatefulWidget {
-   const TextFiledUserName(
+  const TextFiledUserName(
       {Key? key, required this.hintText, required this.onChanged, this.text})
       : super(key: key);
 
@@ -28,6 +28,7 @@ class _TextFiledUserNameState extends State<TextFiledUserName> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      onChanged: (value) => {widget.onChanged(value)},
       textAlignVertical: TextAlignVertical.center,
       controller: controller,
       keyboardType: TextInputType.emailAddress,
@@ -74,13 +75,13 @@ class _TextFiledUserNameState extends State<TextFiledUserName> {
 }
 
 class TextFiledPassword extends StatefulWidget {
-  const TextFiledPassword(
+  TextFiledPassword(
       {Key? key, required this.hintText, required this.onChanged, this.text})
       : super(key: key);
 
   final String hintText;
   final Function(String) onChanged;
-  final String? text;
+  String? text;
   @override
   State<TextFiledPassword> createState() => _TextFiledPasswordState();
 }
@@ -101,6 +102,7 @@ class _TextFiledPasswordState extends State<TextFiledPassword> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      onChanged: (value) => {widget.onChanged(value)},
       textAlignVertical: TextAlignVertical.center,
       controller: controller,
       keyboardType: TextInputType.emailAddress,
