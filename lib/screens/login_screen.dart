@@ -2,12 +2,16 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:chat_app/api/firebase.dart';
+import 'package:chat_app/configs/config.dart';
+import 'package:chat_app/helper/data_helper.dart';
 import 'package:chat_app/resources/colors.dart';
+import 'package:chat_app/screens/home/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 import '../resources/assets.dart';
+import '../services/save_sevices.dart';
 import '../widgets/button_custom.dart';
 import '../widgets/text_filed_custom.dart';
 
@@ -19,13 +23,22 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool? isRemember = false;
+  bool isInit = true;
   bool isLogin = true;
+  bool remember = false;
   String email = "";
   String password = "";
-  String confrimPassword = "12345";
-  String confrimPassword1 = "";
-  String confrimPassword2 = "";
+  String confrimPassword = "";
+
+  Future<bool> getData() async {
+    if (isInit) {
+      remember = await DataHelper().getData<bool>(Config.keyRemember);
+      email = await DataHelper().getData(Config.keyUserName);
+      password = await DataHelper().getData(Config.keyPassword);
+      isInit = false;
+    }
+    return true;
+  }
 
   @override
   void initState() {
@@ -34,15 +47,23 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: colorMain,
-      body: Stack(
-        children: [
-          background(),
-          isLogin ? loginForm(context) : registerForm(context)
-        ],
-      ),
-    );
+    return FutureBuilder(
+        future: getData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return Scaffold(
+              backgroundColor: colorMain,
+              body: Stack(
+                children: [
+                  background(),
+                  isLogin ? loginForm(context) : registerForm(context)
+                ],
+              ),
+            );
+          } else {
+            return Scaffold(backgroundColor: colorMain, body: background());
+          }
+        });
   }
 
   //background
@@ -81,16 +102,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 20,
                         ),
                         TextFiledUserName(
-                            hintText: "User Name",
-                            onChanged: (newString) =>
-                                {print(newString), email = newString}),
+                          hintText: "User Name",
+                          onChanged: (value) {
+                            email = value;
+                          },
+                          text: email,
+                        ),
                         const SizedBox(
                           height: 10,
                         ),
                         TextFiledPassword(
                           hintText: 'Password',
-                          onChanged: (value) => {confrimPassword = value},
-                          text: confrimPassword,
+                          onChanged: (value) {
+                            password = value;
+                          },
+                          text: password,
                         ),
                         const SizedBox(
                           height: 20,
@@ -107,10 +133,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                     side: const BorderSide(color: colorWhite),
                                     materialTapTargetSize:
                                         MaterialTapTargetSize.shrinkWrap,
-                                    value: isRemember,
+                                    value: remember,
                                     onChanged: (value) {
                                       setState(() {
-                                        isRemember = value;
+                                        remember = value!;
                                       });
                                     },
                                   ),
@@ -138,7 +164,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           bool isLogin =
                               await FirebaseAPI.login(email, password);
                           if (isLogin) {
-                            print('login');
+                            DataHelper().setData(Config.keyRemember, remember);
+                            if (remember) {
+                              Save.userLogged(email, password);
+                            } else {
+                              Save.userLogged('', '');
+                            }
+                            // Navigator.of(context).pushReplacement(Home_Screen())
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const Home_Screen()),
+                            );
                           } else {
                             print('login fail');
                           }
@@ -158,8 +195,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                 setState(() {
                                   isLogin = false;
                                 });
-                                await Future.delayed(
-                                    const Duration(microseconds: 150));
                               },
                               child: const Text(
                                 ' Register',
@@ -206,24 +241,27 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         TextFiledUserName(
                           hintText: "User name",
-                          onChanged: (newString) => {},
+                          onChanged: (value) => {
+                            //email = value
+                          },
+                          text: email,
                         ),
                         const SizedBox(
                           height: 10,
                         ),
                         TextFiledPassword(
-                          hintText: 'Password2',
-                          onChanged: (value) => {confrimPassword1 = value},
-                          text: confrimPassword1,
+                          hintText: 'Password',
+                          onChanged: (value) => {
+                            //password = value
+                          },
+                          text: password,
                         ),
                         const SizedBox(
                           height: 10,
                         ),
                         TextFiledPassword(
-                          hintText: 'Confirm password',
-                          onChanged: (value) => {confrimPassword2 = value},
-                          text: confrimPassword2,
-                        ),
+                            hintText: 'Confirm password',
+                            onChanged: (value) => {confrimPassword = value}),
                         const SizedBox(
                           height: 20,
                         ),
@@ -237,8 +275,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             setState(() {
                               isLogin = true;
                             });
-                            await Future.delayed(
-                                const Duration(microseconds: 150));
                           },
                           child: const Text(
                             'Have an account',
