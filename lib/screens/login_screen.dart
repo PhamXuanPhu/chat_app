@@ -6,12 +6,15 @@ import 'package:chat_app/configs/config.dart';
 import 'package:chat_app/helper/data_helper.dart';
 import 'package:chat_app/resources/colors.dart';
 import 'package:chat_app/screens/home/home_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 import '../resources/assets.dart';
-import '../services/save_sevices.dart';
+import '../services/loading_service.dart';
+import '../services/save_sevice.dart';
+import '../services/toast_service.dart';
 import '../widgets/button_custom.dart';
 import '../widgets/text_filed_custom.dart';
 
@@ -24,7 +27,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isInit = true;
-  bool isLogin = true;
+  String index = "login";
   bool remember = false;
   String email = "";
   String password = "";
@@ -40,9 +43,13 @@ class _LoginScreenState extends State<LoginScreen> {
     return true;
   }
 
-  @override
-  void initState() {
-    super.initState();
+  void setData() {
+    DataHelper().setData(Config.keyRemember, remember);
+    if (remember) {
+      Save.userLogged(email, password);
+    } else {
+      Save.userLogged('', '');
+    }
   }
 
   @override
@@ -56,7 +63,11 @@ class _LoginScreenState extends State<LoginScreen> {
               body: Stack(
                 children: [
                   background(),
-                  isLogin ? loginForm(context) : registerForm(context)
+                  formBody(index == "login"
+                      ? loginForm()
+                      : index == "register"
+                          ? registerForm()
+                          : forgotPasswordForm())
                 ],
               ),
             );
@@ -75,145 +86,178 @@ class _LoginScreenState extends State<LoginScreen> {
       ));
 
   //form login
-  Widget loginForm(BuildContext context) => Center(
-      child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-            child: Wrap(children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.8,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white),
-                    borderRadius: BorderRadius.circular(20)),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 50),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Log in',
-                          style: TextStyle(
-                              color: colorWhite,
-                              fontSize: 30,
-                              fontFamily: 'Poppins'),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        TextFiledUserName(
-                          hintText: "User Name",
-                          onChanged: (value) {
-                            email = value;
-                          },
-                          text: email,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextFiledPassword(
-                          hintText: 'Password',
-                          onChanged: (value) {
-                            password = value;
-                          },
-                          text: password,
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Row(
-                              children: [
-                                SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: Checkbox(
-                                    side: const BorderSide(color: colorWhite),
-                                    materialTapTargetSize:
-                                        MaterialTapTargetSize.shrinkWrap,
-                                    value: remember,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        remember = value!;
-                                      });
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                const Text(
-                                  'Remeber me',
-                                  style: TextStyle(
-                                      color: colorWhite, fontSize: 14),
-                                )
-                              ],
-                            ),
-                            const Text(
-                              'Forgot password?',
-                              style: TextStyle(color: colorWhite, fontSize: 14),
-                            )
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        buttonCustom('Login', () async {
-                          bool isLogin =
-                              await FirebaseAPI.login(email, password);
-                          if (isLogin) {
-                            DataHelper().setData(Config.keyRemember, remember);
-                            if (remember) {
-                              Save.userLogged(email, password);
-                            } else {
-                              Save.userLogged('', '');
-                            }
-                            // Navigator.of(context).pushReplacement(Home_Screen())
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Home_Screen()),
-                            );
-                          } else {
-                            print('login fail');
-                          }
-                        }, style: ButtonStyleCustom.white),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Don't have an account?",
-                              style: TextStyle(color: colorWhite, fontSize: 14),
-                            ),
-                            InkWell(
-                              onTap: () async {
-                                setState(() {
-                                  isLogin = false;
-                                });
-                              },
-                              child: const Text(
-                                ' Register',
-                                style: TextStyle(
-                                    color: colorWhite,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ],
-                        )
-                      ]),
+  Widget loginForm() =>
+      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        formTitle('title_dang_nhap'.tr()),
+        space(height: 20),
+        TextFiledUserName(
+          hintText: 'ten_dang_nhap'.tr(),
+          onChanged: (value) {
+            email = value;
+          },
+          text: email,
+        ),
+        space(),
+        TextFiledPassword(
+          hintText: 'mat_khau'.tr(),
+          onChanged: (value) {
+            password = value;
+          },
+          text: password,
+        ),
+        space(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: Checkbox(
+                    side: const BorderSide(color: colorWhite),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    value: remember,
+                    onChanged: (value) {
+                      setState(() {
+                        remember = value!;
+                      });
+                    },
+                  ),
                 ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  'luu_dang_nhap'.tr(),
+                  style: TextStyle(color: colorWhite, fontSize: 14),
+                )
+              ],
+            ),
+            GestureDetector(
+              child: text('quen_mat_khau'.tr()),
+              onTap: () {
+                setState(() {
+                  index = 'forgot';
+                });
+              },
+            )
+          ],
+        ),
+        space(height: 20),
+        buttonCustom('btn_dang_nhap'.tr(), () async {
+          Loading.show();
+          bool login = await FirebaseAPI.login(email, password);
+          if (login) {
+            setData();
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const Home_Screen()),
+            );
+          }
+          Loading.hide();
+        }, style: ButtonStyleCustom.white),
+        space(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            text('chua_co_tai_khoan'.tr()),
+            InkWell(
+              onTap: () async {
+                setState(() {
+                  index = 'register';
+                });
+              },
+              child: Text(
+                'dang_ky'.tr(),
+                style: TextStyle(
+                    color: colorWhite,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold),
               ),
-            ]),
-          )));
+            ),
+          ],
+        ),
+        buttonCustom('Login1', () async {
+          Loading.show();
+          context.setLocale(const Locale('en', 'US'));
+          Loading.hide();
+        }, style: ButtonStyleCustom.white),
+        buttonCustom('Login2', () async {
+          Loading.show();
+          context.setLocale(const Locale('vi', 'VN'));
+          Loading.hide();
+        }, style: ButtonStyleCustom.white),
+      ]);
 
-  // form login
-  Widget registerForm(BuildContext context) => Center(
+  // form register
+  Widget registerForm() =>
+      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+        formTitle('title_dang_ky'.tr()),
+        space(height: 20),
+        TextFiledUserName(
+          hintText: 'ten_dang_nhap'.tr(),
+          onChanged: (value) {
+            email = value;
+          },
+          text: email,
+        ),
+        space(),
+        TextFiledPassword(
+          hintText: 'mat_khau'.tr(),
+          onChanged: (value) {
+            password = value;
+          },
+          text: password,
+        ),
+        space(),
+        TextFiledPassword(
+            hintText: 'xac_nhan_mat_khau'.tr(),
+            onChanged: (value) => {confrimPassword = value}),
+        space(height: 20),
+        buttonCustom('btn_dang_ky'.tr(), () async {
+          bool register = await FirebaseAPI.register(email, password);
+          if (register) {
+            // ignore: use_build_context_synchronously
+            Toast.show(context, 'Đăng ký thành công');
+            setState(() {
+              index = 'login';
+            });
+          }
+        }, style: ButtonStyleCustom.white),
+        space(height: 20),
+        InkWell(
+          onTap: () async {
+            setState(() {
+              index = 'login';
+            });
+          },
+          child: text('da_co_tai_khoan'.tr()),
+        ),
+      ]);
+//forgot password
+  Widget forgotPasswordForm() => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          formTitle('Forgot password'),
+          space(height: 20),
+          TextFiledUserName(
+              hintText: 'email',
+              onChanged: (value) {
+                email = value;
+              }),
+          space(height: 20),
+          buttonCustom('Reset password', () async {
+            bool forgotPassword = await FirebaseAPI.forgotPassword(email);
+            if (forgotPassword) {
+              Toast.show(context, 'Reset password in your email.');
+            }
+          }, style: ButtonStyleCustom.white)
+        ],
+      );
+
+//form
+  Widget formBody(Widget child) => Center(
       child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: BackdropFilter(
@@ -225,65 +269,24 @@ class _LoginScreenState extends State<LoginScreen> {
                     border: Border.all(color: Colors.white),
                     borderRadius: BorderRadius.circular(20)),
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 50),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Register',
-                          style: TextStyle(
-                              color: colorWhite,
-                              fontSize: 30,
-                              fontFamily: 'Poppins'),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        TextFiledUserName(
-                          hintText: "User name",
-                          onChanged: (value) => {
-                            //email = value
-                          },
-                          text: email,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextFiledPassword(
-                          hintText: 'Password',
-                          onChanged: (value) => {
-                            //password = value
-                          },
-                          text: password,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        TextFiledPassword(
-                            hintText: 'Confirm password',
-                            onChanged: (value) => {confrimPassword = value}),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        buttonCustom('Register', () async {},
-                            style: ButtonStyleCustom.white),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        InkWell(
-                          onTap: () async {
-                            setState(() {
-                              isLogin = true;
-                            });
-                          },
-                          child: const Text(
-                            'Have an account',
-                            style: TextStyle(color: colorWhite, fontSize: 14),
-                          ),
-                        ),
-                      ]),
+                  padding: const EdgeInsets.fromLTRB(20, 30, 20, 40),
+                  child: child,
                 ),
               ),
             ]),
           )));
+  //form title
+  Text formTitle(String text) => Text(
+        text,
+        style: const TextStyle(
+            color: colorWhite, fontSize: 30, fontFamily: 'Poppins'),
+      );
+  //space
+  SizedBox space({double height = 10}) => SizedBox(
+        height: height,
+      );
+  Text text(String text) => Text(
+        text,
+        style: const TextStyle(color: colorWhite, fontSize: 14),
+      );
 }

@@ -6,4 +6,5 @@ class Images {
 class Rives {
   Rives._();
   static const String background = 'assets/rives/background.riv';
+  static const String loading = 'assets/rives/loading.riv';
 }

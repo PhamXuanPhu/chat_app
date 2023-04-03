@@ -2,14 +2,24 @@ import 'package:chat_app/api/firebase.dart';
 import 'package:chat_app/configs/config.dart';
 import 'package:chat_app/screens/home/home_screen.dart';
 import 'package:chat_app/screens/login_screen.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'helper/data_helper.dart';
+import 'services/global_key.dart';
 
-void main() {
-  runApp(const MainApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
+  runApp(
+    EasyLocalization(
+        supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN')],
+        path: 'assets/translations',
+        fallbackLocale: const Locale('vi', 'VN'),
+        child: const MainApp()),
+  );
 }
 
 class MainApp extends StatelessWidget {
@@ -38,6 +48,10 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        localizationsDelegates: context.localizationDelegates,
+        supportedLocales: context.supportedLocales,
+        locale: context.locale,
+        navigatorKey: GlobalVariable.navigatorKey,
         home: FutureBuilder(
             future: checkLogin(),
             builder: (context, snapshot) {
