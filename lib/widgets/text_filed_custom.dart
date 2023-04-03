@@ -32,14 +32,14 @@ class _TextFiledUserNameState extends State<TextFiledUserName> {
       textAlignVertical: TextAlignVertical.center,
       controller: controller,
       keyboardType: TextInputType.emailAddress,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 15,
         color: colorWhite,
       ),
       decoration: InputDecoration(
           contentPadding: EdgeInsets.zero,
           hintText: widget.hintText,
-          prefixIcon: const Icon(
+          prefixIcon: Icon(
             Icons.person,
             color: colorWhite,
             size: 20,
@@ -48,7 +48,7 @@ class _TextFiledUserNameState extends State<TextFiledUserName> {
               ? null
               : IconButton(
                   onPressed: () => {controller.clear()},
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.clear_outlined,
                     color: colorWhite,
                     size: 20,
@@ -59,15 +59,15 @@ class _TextFiledUserNameState extends State<TextFiledUserName> {
           //  fillColor: colorTrain_30,
 
           filled: true,
-          hintStyle: const TextStyle(fontSize: 15, color: colorWhite),
+          hintStyle: TextStyle(fontSize: 15, color: colorWhite),
           focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: colorBlack),
+              borderSide: BorderSide(color: colorBlack),
               borderRadius: BorderRadius.circular(10)),
           enabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: colorWhite),
+              borderSide: BorderSide(color: colorWhite),
               borderRadius: BorderRadius.circular(10)),
           border: OutlineInputBorder(
-              borderSide: const BorderSide(color: colorWhite),
+              borderSide: BorderSide(color: colorWhite),
               borderRadius: BorderRadius.circular(10))),
       maxLines: 1,
     );
@@ -109,7 +109,7 @@ class _TextFiledPasswordState extends State<TextFiledPassword> {
 
       /// thay đổi kiểu của password
       obscureText: enableIsPassword,
-      style: const TextStyle(
+      style: TextStyle(
         fontSize: 15,
         color: colorWhite,
       ),
@@ -122,7 +122,7 @@ class _TextFiledPasswordState extends State<TextFiledPassword> {
           hintText: widget.hintText,
 
           /// thêm icon trước
-          prefixIcon: const Icon(
+          prefixIcon: Icon(
             Icons.lock,
             color: colorWhite,
             size: 20,
@@ -131,12 +131,12 @@ class _TextFiledPasswordState extends State<TextFiledPassword> {
               ? null
               : IconButton(
                   icon: enableIsPassword
-                      ? const Icon(
+                      ? Icon(
                           Icons.remove_red_eye_outlined,
                           color: colorWhite,
                           size: 20,
                         )
-                      : const Icon(
+                      : Icon(
                           Icons.remove_red_eye,
                           color: colorWhite,
                           size: 20,
@@ -148,15 +148,15 @@ class _TextFiledPasswordState extends State<TextFiledPassword> {
           // fillColor: colorTrain_30,
 
           filled: true,
-          hintStyle: const TextStyle(fontSize: 15, color: colorWhite),
+          hintStyle: TextStyle(fontSize: 15, color: colorWhite),
           focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: colorBlack),
+              borderSide: BorderSide(color: colorBlack),
               borderRadius: BorderRadius.circular(10)),
           enabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: colorWhite),
+              borderSide: BorderSide(color: colorWhite),
               borderRadius: BorderRadius.circular(10)),
           border: OutlineInputBorder(
-              borderSide: const BorderSide(color: colorWhite),
+              borderSide: BorderSide(color: colorWhite),
               borderRadius: BorderRadius.circular(10))),
       maxLines: 1,
     );

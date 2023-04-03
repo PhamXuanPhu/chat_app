@@ -28,6 +28,7 @@ flutter:
     - assets/rives/
     - assets/fonts/
     - assets/translations/
+    - lib/resources/translations/
   fonts:
     - family: Poppins
       fonts:

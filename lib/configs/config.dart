@@ -4,4 +4,5 @@ class Config {
   static String keyUserName = 'username';
   static String keyPassword = 'password';
   static String keyRemember = 'remember';
+  static String keyMode = 'mode';
 }

@@ -130,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 Text(
                   'luu_dang_nhap'.tr(),
-                  style: TextStyle(color: colorWhite, fontSize: 14),
+                  style: const TextStyle(color: colorWhite, fontSize: 14),
                 )
               ],
             ),
@@ -146,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         space(height: 20),
         buttonCustom('btn_dang_nhap'.tr(), () async {
-          Loading.show();
+          //  Loading.show();
           bool login = await FirebaseAPI.login(email, password);
           if (login) {
             setData();
@@ -155,13 +155,17 @@ class _LoginScreenState extends State<LoginScreen> {
               MaterialPageRoute(builder: (context) => const Home_Screen()),
             );
           }
-          Loading.hide();
-        }, style: ButtonStyleCustom.white),
+          Toast.success('Đăng ký thành công');
+          // Loading.hide();
+        }),
         space(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             text('chua_co_tai_khoan'.tr()),
+            const SizedBox(
+              width: 10,
+            ),
             InkWell(
               onTap: () async {
                 setState(() {
@@ -170,7 +174,7 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               child: Text(
                 'dang_ky'.tr(),
-                style: TextStyle(
+                style: const TextStyle(
                     color: colorWhite,
                     fontSize: 14,
                     fontWeight: FontWeight.bold),
@@ -178,16 +182,20 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ],
         ),
-        buttonCustom('Login1', () async {
-          Loading.show();
-          context.setLocale(const Locale('en', 'US'));
-          Loading.hide();
-        }, style: ButtonStyleCustom.white),
-        buttonCustom('Login2', () async {
-          Loading.show();
-          context.setLocale(const Locale('vi', 'VN'));
-          Loading.hide();
-        }, style: ButtonStyleCustom.white),
+        // buttonCustom('Login1', () async {
+        //   Loading.show();
+        //   context.setLocale(const Locale('en', 'US'));
+        //   Loading.hide();
+        // }),
+        // buttonCustom2('Login2', () async {
+        //   Loading.show();
+        //   context.setLocale(const Locale('vi', 'VN'));
+        //   Loading.hide();
+        // }),
+        // ElevatedButton(
+        //   child: Text('text'),
+        //   onPressed: () {},
+        // )
       ]);
 
   // form register
@@ -219,12 +227,12 @@ class _LoginScreenState extends State<LoginScreen> {
           bool register = await FirebaseAPI.register(email, password);
           if (register) {
             // ignore: use_build_context_synchronously
-            Toast.show(context, 'Đăng ký thành công');
+            Toast.success('Đăng ký thành công');
             setState(() {
               index = 'login';
             });
           }
-        }, style: ButtonStyleCustom.white),
+        }),
         space(height: 20),
         InkWell(
           onTap: () async {
@@ -250,9 +258,9 @@ class _LoginScreenState extends State<LoginScreen> {
           buttonCustom('Reset password', () async {
             bool forgotPassword = await FirebaseAPI.forgotPassword(email);
             if (forgotPassword) {
-              Toast.show(context, 'Reset password in your email.');
+              Toast.success('Reset password in your email.');
             }
-          }, style: ButtonStyleCustom.white)
+          })
         ],
       );
 

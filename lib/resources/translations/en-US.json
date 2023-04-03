@@ -1,7 +1,14 @@
 {
-  "home": "Home 22",
-  "title_login" : "Login",
+  "title_dang_nhap": "Login",
   "ten_dang_nhap": "User name",
-  "mat_khau" : "Password",
-  "btn_dang_xuat" : "Logout"
+  "mat_khau": "Password",
+  "luu_dang_nhap": "Remember me",
+  "quen_mat_khau": "Forgot password?",
+  "btn_dang_nhap": "Login",
+  "chua_co_tai_khoan": "Don't have an account?",
+  "dang_ky": "Register",
+  "title_dang_ky": "Register",
+  "xac_nhan_mat_khau": "Confirm password",
+  "btn_dang_ky": "Register",
+  "da_co_tai_khoan": "Have an account"
 }

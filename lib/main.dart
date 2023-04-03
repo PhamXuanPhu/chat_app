@@ -8,6 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'helper/data_helper.dart';
+import 'resources/colors.dart';
+import 'resources/theme.dart';
 import 'services/global_key.dart';
 
 void main() async {
@@ -16,7 +18,7 @@ void main() async {
   runApp(
     EasyLocalization(
         supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN')],
-        path: 'assets/translations',
+        path: 'lib/resources/translations',
         fallbackLocale: const Locale('vi', 'VN'),
         child: const MainApp()),
   );
@@ -48,6 +50,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        theme: MyTheme.darkTheme,
         localizationsDelegates: context.localizationDelegates,
         supportedLocales: context.supportedLocales,
         locale: context.locale,

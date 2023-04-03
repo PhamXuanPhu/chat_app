@@ -11,9 +11,9 @@ class FirebaseAPI {
       return true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        // ToastMessage.show('No user found for that email.');
+       // Toast.show('No user found for that email.');
       } else if (e.code == 'wrong-password') {
-        // ToastMessage.show('Wrong password provided for that user.');
+       // Toast.show('Wrong password provided for that user.');
       }
     }
     return false;
