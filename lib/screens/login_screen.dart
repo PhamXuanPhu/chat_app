@@ -7,13 +7,13 @@ import 'package:chat_app/helper/data_helper.dart';
 import 'package:chat_app/resources/colors.dart';
 import 'package:chat_app/screens/home/home_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
 import '../resources/assets.dart';
 import '../services/loading_service.dart';
-import '../services/save_sevice.dart';
+import '../services/data_sevice.dart';
 import '../services/toast_service.dart';
 import '../widgets/button_custom.dart';
 import '../widgets/text_filed_custom.dart';
@@ -27,29 +27,18 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isInit = true;
-  String index = "login";
-  bool remember = false;
+  int _currentIndex = 0;
   String email = "";
   String password = "";
-  String confrimPassword = "";
+  String name = "";
 
   Future<bool> getData() async {
     if (isInit) {
-      remember = await DataHelper().getData<bool>(Config.keyRemember);
       email = await DataHelper().getData(Config.keyUserName);
       password = await DataHelper().getData(Config.keyPassword);
       isInit = false;
     }
     return true;
-  }
-
-  void setData() {
-    DataHelper().setData(Config.keyRemember, remember);
-    if (remember) {
-      Save.userLogged(email, password);
-    } else {
-      Save.userLogged('', '');
-    }
   }
 
   @override
@@ -63,11 +52,14 @@ class _LoginScreenState extends State<LoginScreen> {
               body: Stack(
                 children: [
                   background(),
-                  formBody(index == "login"
-                      ? loginForm()
-                      : index == "register"
-                          ? registerForm()
-                          : forgotPasswordForm())
+                  IndexedStack(
+                    index: _currentIndex,
+                    children: [
+                      formBody(loginForm(), 0),
+                      formBody(registerForm(), 1),
+                      formBody(forgotPasswordForm(), 2),
+                    ],
+                  )
                 ],
               ),
             );
@@ -90,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         formTitle('title_dang_nhap'.tr()),
         space(height: 20),
-        TextFiledUserName(
+        TextFiledEmail(
           hintText: 'ten_dang_nhap'.tr(),
           onChanged: (value) {
             email = value;
@@ -106,96 +98,61 @@ class _LoginScreenState extends State<LoginScreen> {
           text: password,
         ),
         space(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: Checkbox(
-                    side: const BorderSide(color: colorWhite),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    value: remember,
-                    onChanged: (value) {
-                      setState(() {
-                        remember = value!;
-                      });
-                    },
-                  ),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Text(
-                  'luu_dang_nhap'.tr(),
-                  style: const TextStyle(color: colorWhite, fontSize: 14),
-                )
-              ],
-            ),
-            GestureDetector(
-              child: text('quen_mat_khau'.tr()),
-              onTap: () {
-                setState(() {
-                  index = 'forgot';
-                });
-              },
-            )
-          ],
+        Align(
+          alignment: Alignment.centerRight,
+          child: GestureDetector(
+            child: text('quen_mat_khau'.tr()),
+            onTap: () {
+              setState(() {
+                _currentIndex = 2;
+              });
+            },
+          ),
         ),
-        space(height: 20),
+        space(height: 15),
         buttonCustom('btn_dang_nhap'.tr(), () async {
-          //  Loading.show();
-          bool login = await FirebaseAPI.login(email, password);
-          if (login) {
-            setData();
+          Loading().show();
+          String result = await FirebaseAPI.login(email, password);
+          if (result.isEmpty) {
+            Toast.success('noti_dang_nhap_thanh_cong'.tr());
+            DataService.userLogged(email, password);
+            // ignore: use_build_context_synchronously
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const Home_Screen()),
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
             );
+          } else {
+            Toast.success(result);
           }
-          Toast.success('Đăng ký thành công');
-          // Loading.hide();
+          Loading().hide();
         }),
         space(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            text('chua_co_tai_khoan'.tr()),
-            const SizedBox(
-              width: 10,
+        FittedBox(
+          child: RichText(
+            overflow: TextOverflow.ellipsis,
+            text: TextSpan(
+              text: 'chua_co_tai_khoan'.tr(),
+              children: <TextSpan>[
+                const TextSpan(text: ' '),
+                TextSpan(
+                    text: 'dang_ky'.tr(),
+                    style: const TextStyle(
+                        color: colorWhite,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        setState(() {
+                          _currentIndex = 1;
+                        });
+                      }),
+              ],
             ),
-            InkWell(
-              onTap: () async {
-                setState(() {
-                  index = 'register';
-                });
-              },
-              child: Text(
-                'dang_ky'.tr(),
-                style: const TextStyle(
-                    color: colorWhite,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
-        ),
-        // buttonCustom('Login1', () async {
-        //   Loading.show();
-        //   context.setLocale(const Locale('en', 'US'));
-        //   Loading.hide();
-        // }),
-        // buttonCustom2('Login2', () async {
-        //   Loading.show();
-        //   context.setLocale(const Locale('vi', 'VN'));
-        //   Loading.hide();
-        // }),
-        // ElevatedButton(
-        //   child: Text('text'),
-        //   onPressed: () {},
-        // )
+          ),
+        )
+
+        //   ],
+        // ),
       ]);
 
   // form register
@@ -204,7 +161,13 @@ class _LoginScreenState extends State<LoginScreen> {
         formTitle('title_dang_ky'.tr()),
         space(height: 20),
         TextFiledUserName(
-          hintText: 'ten_dang_nhap'.tr(),
+          hintText: 'ten_nguoi_dung'.tr(),
+          onChanged: (value) => {name = value},
+          text: name,
+        ),
+        space(),
+        TextFiledEmail(
+          hintText: 'email'.tr(),
           onChanged: (value) {
             email = value;
           },
@@ -218,18 +181,13 @@ class _LoginScreenState extends State<LoginScreen> {
           },
           text: password,
         ),
-        space(),
-        TextFiledPassword(
-            hintText: 'xac_nhan_mat_khau'.tr(),
-            onChanged: (value) => {confrimPassword = value}),
         space(height: 20),
         buttonCustom('btn_dang_ky'.tr(), () async {
-          bool register = await FirebaseAPI.register(email, password);
-          if (register) {
-            // ignore: use_build_context_synchronously
-            Toast.success('Đăng ký thành công');
+          String register = await FirebaseAPI.register(name, email, password);
+          if (register.isEmpty) {
+            Toast.success('noti_dang_ky_thanh_cong'.tr());
             setState(() {
-              index = 'login';
+              _currentIndex = 0;
             });
           }
         }),
@@ -237,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
         InkWell(
           onTap: () async {
             setState(() {
-              index = 'login';
+              _currentIndex = 0;
             });
           },
           child: text('da_co_tai_khoan'.tr()),
@@ -249,7 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           formTitle('Forgot password'),
           space(height: 20),
-          TextFiledUserName(
+          TextFiledEmail(
               hintText: 'email',
               onChanged: (value) {
                 email = value;
@@ -259,20 +217,27 @@ class _LoginScreenState extends State<LoginScreen> {
             bool forgotPassword = await FirebaseAPI.forgotPassword(email);
             if (forgotPassword) {
               Toast.success('Reset password in your email.');
+              setState(() {
+                _currentIndex = 0;
+              });
             }
-          })
+          }),
         ],
       );
 
 //form
-  Widget formBody(Widget child) => Center(
+  Widget formBody(Widget child, int index) => Center(
       child: ClipRRect(
           borderRadius: BorderRadius.circular(20),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
             child: Wrap(children: [
-              Container(
-                width: MediaQuery.of(context).size.width * 0.8,
+              AnimatedContainer(
+                curve: Curves.easeInOut,
+                duration: const Duration(milliseconds: 500),
+                width: _currentIndex == index
+                    ? MediaQuery.of(context).size.width * 0.8
+                    : 0,
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.white),
                     borderRadius: BorderRadius.circular(20)),
@@ -284,17 +249,22 @@ class _LoginScreenState extends State<LoginScreen> {
             ]),
           )));
   //form title
-  Text formTitle(String text) => Text(
-        text,
-        style: const TextStyle(
-            color: colorWhite, fontSize: 30, fontFamily: 'Poppins'),
+  Widget formTitle(String text) => FittedBox(
+        child: Text(
+          text,
+          style: const TextStyle(
+              color: colorWhite, fontSize: 30, fontFamily: 'Poppins'),
+          overflow: TextOverflow.ellipsis,
+        ),
       );
   //space
   SizedBox space({double height = 10}) => SizedBox(
         height: height,
       );
-  Text text(String text) => Text(
-        text,
-        style: const TextStyle(color: colorWhite, fontSize: 14),
+  Widget text(String text) => FittedBox(
+        child: Text(
+          text,
+          style: const TextStyle(color: colorWhite, fontSize: 14),
+        ),
       );
 }

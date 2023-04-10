@@ -32,4 +32,5 @@ class DataHelper {
       throw Exception("Type is not supported.");
     }
   }
+
 }

@@ -1,6 +1,7 @@
 {
+  "title_home": "Trang Chủ",
   "title_dang_nhap": "Đăng Nhập",
-  "ten_dang_nhap": "Tài khoản",
+  "ten_nguoi_dung": "Tên người dùng",
   "mat_khau": "Mật khẩu",
   "luu_dang_nhap": "Lưu đăng nhập",
   "quen_mat_khau": "Quên mật khẩu?",
@@ -10,5 +11,16 @@
   "title_dang_ky": "Đăng Ký",
   "xac_nhan_mat_khau": "Xác nhận mật khẩu",
   "btn_dang_ky": "Đăng ký",
-  "da_co_tai_khoan": "Đã có tài khoản"
+  "da_co_tai_khoan": "Đã có tài khoản",
+  "title_chat": "Tin nhắn",
+  "title_danh_ba": "Danh bạ",
+  "title_ho_so": "Hồ sơ",
+  "noti_khong_tim_thay_nguoi_dung_voi_email_do": "Không tìm thấy người dùng với email đó.",
+  "noti_mat_khau_duoc_cung_cap_khong_dung": "Mật khẩu được cung cấp không đúng.",
+  "noti_loi_he_thong": "Lỗi hệ thống.",
+  "noti_dang_nhap_thanh_cong": "Đăng nhập thành công.",
+  "noti_dang_ky_thanh_cong": "Đăng ký thành công.",
+  "noti_mat_khau_duoc_cung_cap_qua_yeu": "Mật khẩu được cung cấp quá yếu.",
+  "noti_tai_khoan_da_ton_tai_cho_email_do": "Tài khoản đã tồn tại cho email đó.",
+  "email": "email"
 }

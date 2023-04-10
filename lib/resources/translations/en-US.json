@@ -1,6 +1,7 @@
 {
+  "title_home": "Home",
   "title_dang_nhap": "Login",
-  "ten_dang_nhap": "User name",
+  "ten_nguoi_dung": "User name",
   "mat_khau": "Password",
   "luu_dang_nhap": "Remember me",
   "quen_mat_khau": "Forgot password?",
@@ -10,5 +11,16 @@
   "title_dang_ky": "Register",
   "xac_nhan_mat_khau": "Confirm password",
   "btn_dang_ky": "Register",
-  "da_co_tai_khoan": "Have an account"
+  "da_co_tai_khoan": "Have an account",
+  "title_chat": "Chat",
+  "title_danh_ba": "Contact",
+  "title_ho_so": "Profile",
+  "noti_khong_tim_thay_nguoi_dung_voi_email_do": "No user found for that email.",
+  "noti_mat_khau_duoc_cung_cap_khong_dung": "Wrong password provided for that user.",
+  "noti_loi_he_thong": "System error.",
+  "noti_dang_nhap_thanh_cong": "Login successful.",
+  "noti_dang_ky_thanh_cong": "Register successful.",
+  "noti_mat_khau_duoc_cung_cap_qua_yeu": "The password provided is too weak.",
+  "noti_tai_khoan_da_ton_tai_cho_email_do": "The account already exists for that email.",
+  "email": "email"
 }
