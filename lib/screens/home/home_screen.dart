@@ -7,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 import '../../widgets/navigation_bar.dart';
-import 'chat_screen.dart';
+import 'chats_screen.dart';
 
 class HomeScreen extends StatefulWidget {
+  static const id = 'home_screen';
+
   const HomeScreen({Key? key}) : super(key: key);
 
   @override

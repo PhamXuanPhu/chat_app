@@ -1,5 +1,6 @@
 import 'package:chat_app/configs/config.dart';
 import 'package:chat_app/helper/data_helper.dart';
+import 'package:chat_app/models/user.dart';
 
 class DataService {
   static Future<void> userLogged(String email, String password) async {

@@ -1,5 +1,7 @@
 import 'package:chat_app/configs/config.dart';
+import 'package:chat_app/models/message.dart';
 import 'package:chat_app/screens/login_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -8,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../api/firebase.dart';
 import '../../blocs/switch/switch_bloc.dart';
 import '../../services/global_key.dart';
-import '../../services/data_sevice.dart';
+import '../../services/data_service.dart';
 import '../../widgets/button_custom.dart';
 
 const Locale swissFrench = Locale('fr', 'CH');
@@ -43,6 +45,18 @@ Widget user() => Container(
               GlobalVariable.navigatorKey.currentContext!,
               MaterialPageRoute(builder: (context) => const LoginScreen()),
             );
+          }),
+          buttonCustom2('send', () async {
+            Message message = Message(
+                id: "1264511",
+                chat_id:
+                    'Cdx9pA1qtdRwXUvORAb930UDoMw19TvWV9S40Ie5jWpGC1iOGvuPYsH3',
+                from_id: 'Cdx9pA1qtdRwXUvORAb930UDoMw1',
+                message: DateTime.now().toString(),
+                update_on: Timestamp.now(),
+                to_id: '9TvWV9S40Ie5jWpGC1iOGvuPYsH3',
+                show: true);
+            await FirebaseAPI.sendMessage(message);
           }),
         ],
       ),

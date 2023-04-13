@@ -10,15 +10,10 @@ Widget chat() => StreamBuilder(
       if (snapshot.hasData) {
         List<Chat> chats =
             snapshot.data!.docs.map((doc) => doc.data()).toList();
-        return ListView.separated(
+        return ListView.builder(
           itemCount: chats.length,
           itemBuilder: (context, index) {
-            return chatItemTemplate(chats[index]);
-
-            // return itemTemplate(list[index]);
-          },
-          separatorBuilder: (context, index) {
-            return const Divider();
+            return chatItemTemplate(chats[index], context);
           },
         );
       }

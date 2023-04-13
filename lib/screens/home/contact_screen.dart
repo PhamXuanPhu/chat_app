@@ -12,9 +12,7 @@ Widget contact() => BlocBuilder<UserBloc, UserState>(builder: (context, state) {
             return ListView.separated(
               itemCount: state.users.length,
               itemBuilder: (context, index) {
-                return userItemTemplate(state.users[index]);
-
-                // return itemTemplate(list[index]);
+                return userItemTemplate(state.users[index], context);
               },
               separatorBuilder: (context, index) {
                 return const Divider();

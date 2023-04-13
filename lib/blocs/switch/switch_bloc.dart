@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:chat_app/services/data_sevice.dart';
+import 'package:chat_app/services/data_service.dart';
 import 'package:equatable/equatable.dart';
 
 part 'switch_event.dart';

@@ -22,5 +22,8 @@
   "noti_dang_ky_thanh_cong": "Đăng ký thành công.",
   "noti_mat_khau_duoc_cung_cap_qua_yeu": "Mật khẩu được cung cấp quá yếu.",
   "noti_tai_khoan_da_ton_tai_cho_email_do": "Tài khoản đã tồn tại cho email đó.",
-  "email": "email"
+  "email": "email",
+  "noti_dat_lai_mat_khau_trong_email": "Đặt lại mật khẩu trong email.",
+  "quay_lai_trang_dang_nhap": "Quay lại trang đăng nhập",
+  "nhap_tin_nhan": "Nhập tin nhắn"
 }

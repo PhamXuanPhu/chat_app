@@ -13,7 +13,7 @@ import 'package:rive/rive.dart';
 
 import '../resources/assets.dart';
 import '../services/loading_service.dart';
-import '../services/data_sevice.dart';
+import '../services/data_service.dart';
 import '../services/toast_service.dart';
 import '../widgets/button_custom.dart';
 import '../widgets/text_filed_custom.dart';
@@ -83,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
         formTitle('title_dang_nhap'.tr()),
         space(height: 20),
         TextFiledEmail(
-          hintText: 'ten_dang_nhap'.tr(),
+          hintText: 'email'.tr(),
           onChanged: (value) {
             email = value;
           },
@@ -122,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
               MaterialPageRoute(builder: (context) => const HomeScreen()),
             );
           } else {
-            Toast.success(result);
+            Toast.message(result);
           }
           Loading().hide();
         }),
@@ -189,6 +189,8 @@ class _LoginScreenState extends State<LoginScreen> {
             setState(() {
               _currentIndex = 0;
             });
+          } else {
+            Toast.error(register);
           }
         }),
         space(height: 20),
@@ -216,12 +218,22 @@ class _LoginScreenState extends State<LoginScreen> {
           buttonCustom('Reset password', () async {
             bool forgotPassword = await FirebaseAPI.forgotPassword(email);
             if (forgotPassword) {
-              Toast.success('Reset password in your email.');
+              Toast.success('noti_dat_lai_mat_khau_trong_email'.tr());
               setState(() {
                 _currentIndex = 0;
               });
+            } else {
+              Toast.success('noti_loi_he_thong'.tr());
             }
           }),
+          InkWell(
+            onTap: () async {
+              setState(() {
+                _currentIndex = 0;
+              });
+            },
+            child: text('quay_lai_trang_dang_nhap'.tr()),
+          ),
         ],
       );
 

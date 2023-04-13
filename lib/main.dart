@@ -6,7 +6,8 @@ import 'package:chat_app/blocs/user/user_bloc.dart';
 import 'package:chat_app/configs/config.dart';
 import 'package:chat_app/screens/home/home_screen.dart';
 import 'package:chat_app/screens/login_screen.dart';
-import 'package:chat_app/services/data_sevice.dart';
+import 'package:chat_app/services/app_router.dart';
+import 'package:chat_app/services/data_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -39,7 +40,6 @@ class MainApp extends StatelessWidget {
   bool mode = false;
 
   Future<void> init() async {
-    //FirebaseApp firebaseApp =
     mode = await DataService.getMode();
     await Firebase.initializeApp();
     FirebaseAPI.init();
@@ -73,6 +73,7 @@ class MainApp extends StatelessWidget {
                         supportedLocales: context.supportedLocales,
                         locale: context.locale,
                         navigatorKey: GlobalVariable.navigatorKey,
+                        onGenerateRoute: AppRouter().onGenerateRoute,
                         home: snapshot.data!
                             ? const HomeScreen()
                             : const LoginScreen());
