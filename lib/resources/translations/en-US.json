@@ -14,7 +14,8 @@
   "da_co_tai_khoan": "Have an account",
   "title_chat": "Chat",
   "title_danh_ba": "Contact",
-  "title_ho_so": "Profile",
+  "title_cong_dong": "Community",
+  "title_loi_moi": "Requests",
   "noti_khong_tim_thay_nguoi_dung_voi_email_do": "No user found for that email.",
   "noti_mat_khau_duoc_cung_cap_khong_dung": "Wrong password provided for that user.",
   "noti_loi_he_thong": "System error.",
@@ -25,5 +26,14 @@
   "email": "email",
   "noti_dat_lai_mat_khau_trong_email": "Reset password in your email.",
   "quay_lai_trang_dang_nhap": "Back to login",
-  "nhap_tin_nhan": "Send message"
+  "nhap_tin_nhan": "Send message",
+  "noti_vui_long_nhap_mat_khau": "Please enter your password.",
+  "noti_vui_long_nhap_email": "Please enter your email.",
+  "noti_vui_long_nhap_email_hop_le": "Please enter a valid email.",
+  "noti_vui_long_nhap_ten_nguoi_dung": "Please enter user name.",
+  "tim_kiem": "Search",
+  "noti_da_gui_loi_moi_ket_ban": "Friend request sent.",
+  "thong_tin_nguoi_dung": "User information",
+  "truc_tuyen": "Online",
+  "ngoai_tuyen": "Offline"
 }

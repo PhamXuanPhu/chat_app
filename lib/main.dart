@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:chat_app/api/firebase.dart';
-import 'package:chat_app/blocs/switch/switch_bloc.dart';
+import 'package:chat_app/blocs/setting/setting_bloc.dart';
 import 'package:chat_app/blocs/user/user_bloc.dart';
 import 'package:chat_app/configs/config.dart';
 import 'package:chat_app/screens/home/home_screen.dart';
@@ -16,6 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'resources/theme.dart';
 import 'services/global_key.dart';
+import 'widgets/loading_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +27,7 @@ void main() async {
         supportedLocales: const [Locale('en', 'US'), Locale('vi', 'VN')],
         path: 'lib/resources/translations',
         fallbackLocale: locale,
-        child: MainApp()),
+        child: const MainApp()),
   );
 }
 
@@ -35,8 +36,14 @@ Future<Locale> getLocale() async {
   return language == Config.enCode ? Config.english : Config.vietnamese;
 }
 
-class MainApp extends StatelessWidget {
-  MainApp({super.key});
+class MainApp extends StatefulWidget {
+  const MainApp({super.key});
+
+  @override
+  State<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
   bool mode = false;
 
   Future<void> init() async {
@@ -51,6 +58,12 @@ class MainApp extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
         future: checkLogin(),
@@ -60,13 +73,14 @@ class MainApp extends StatelessWidget {
                 providers: [
                   BlocProvider(create: (context) => UserBloc()),
                   BlocProvider(create: (context) {
-                    return SwitchBloc()..add(SwitchEvent(switchValue: mode));
+                    return SettingBloc()
+                      ..add(SwitchThemeApp(switchValue: mode));
                   }),
                 ],
-                child: BlocBuilder<SwitchBloc, SwitchState>(
+                child: BlocBuilder<SettingBloc, SettingState>(
                   builder: (context, state) {
                     return MaterialApp(
-                        theme: state.switchValue
+                        theme: state.theme
                             ? MyTheme.darkTheme
                             : MyTheme.lightTheme,
                         localizationsDelegates: context.localizationDelegates,
@@ -80,8 +94,17 @@ class MainApp extends StatelessWidget {
                   },
                 ));
           } else {
-            return const CupertinoActivityIndicator();
+            return loadingScreen();
           }
         });
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      FirebaseAPI.updateStateUser(true);
+    } else {
+      FirebaseAPI.updateStateUser(false);
+    }
   }
 }

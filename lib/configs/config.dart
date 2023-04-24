@@ -11,7 +11,9 @@ class Config {
   static Locale vietnamese = const Locale('vi', 'VN');
   static String enCode = 'en-US';
   static String vnCode = 'vi-VN';
-  static String keyUserLoggedID = 'userloggedid';
-  static String keyUserLoggedName = 'userloggedname';
-  static String keyUserLoggedEmail = 'userloggedemail';
+
+  //API
+  static String chatroooms = 'chatrooms';
+  static String users = 'users';
+  static String requests = 'requests';
 }

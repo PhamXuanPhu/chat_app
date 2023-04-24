@@ -15,32 +15,36 @@ Widget bottomNavigationBar(BuildContext context, Function(int) onTabChange) =>
           borderRadius: BorderRadius.circular(25),
           child: GNav(
               onTabChange: onTabChange,
-              duration: const Duration(milliseconds: 400),
+              duration: const Duration(milliseconds: 200),
               curve: Curves.easeOutExpo,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               tabBackgroundColor:
                   Theme.of(context).bottomNavigationBarTheme.selectedItemColor!,
-              gap: 8,
+              gap: 5,
               color: colorWhite,
               backgroundColor:
                   Theme.of(context).bottomNavigationBarTheme.backgroundColor!,
               activeColor: colorWhite,
               tabs: [
                 GButton(
-                  icon: Icons.question_answer_outlined,
+                  padding: const EdgeInsets.all(14),
+                  icon: Icons.question_answer,
                   text: 'title_chat'.tr(),
                 ),
                 GButton(
-                  icon: Icons.people_outline,
+                  padding: const EdgeInsets.all(14),
+                  icon: Icons.group,
                   text: 'title_danh_ba'.tr(),
                 ),
                 GButton(
-                  icon: Icons.search,
-                  text: 'Search',
+                  padding: const EdgeInsets.all(14),
+                  icon: Icons.person_add,
+                  text: 'title_loi_moi'.tr(),
                 ),
                 GButton(
-                  icon: Icons.account_circle_outlined,
-                  text: 'title_ho_so'.tr(),
+                  padding: const EdgeInsets.all(14),
+                  icon: Icons.language,
+                  text: 'title_cong_dong'.tr(),
                 )
               ]),
         ),

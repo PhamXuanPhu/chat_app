@@ -12,18 +12,21 @@ Widget messageItemTemplate(Message message, BuildContext context) => Align(
           : Alignment.centerLeft,
       child: Container(
         margin: message.from_id == CurrentUser.user.id
-            ? const EdgeInsets.fromLTRB(100, 2, 2, 2)
-            : const EdgeInsets.fromLTRB(2, 2, 100, 2),
-        padding: const EdgeInsets.all(8),
+            ? const EdgeInsets.fromLTRB(100, 1, 15, 1)
+            : const EdgeInsets.fromLTRB(15, 1, 100, 1),
+        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
         decoration: BoxDecoration(
             color: message.from_id == CurrentUser.user.id
                 ? colorMain
-                : Colors.grey.shade500,
-            borderRadius: BorderRadius.circular(8)),
+                : Theme.of(context).toggleableActiveColor,
+            borderRadius: BorderRadius.circular(20)),
         child: Text(
           message.message,
           overflow: TextOverflow.visible,
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(
+              color: message.from_id == CurrentUser.user.id
+                  ? Colors.white
+                  : Theme.of(context).selectedRowColor),
         ),
       ),
     );

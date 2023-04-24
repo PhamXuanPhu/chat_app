@@ -14,7 +14,8 @@
   "da_co_tai_khoan": "Đã có tài khoản",
   "title_chat": "Tin nhắn",
   "title_danh_ba": "Danh bạ",
-  "title_ho_so": "Hồ sơ",
+  "title_cong_dong": "Cộng đồng",
+  "title_loi_moi": "Lời mời",
   "noti_khong_tim_thay_nguoi_dung_voi_email_do": "Không tìm thấy người dùng với email đó.",
   "noti_mat_khau_duoc_cung_cap_khong_dung": "Mật khẩu được cung cấp không đúng.",
   "noti_loi_he_thong": "Lỗi hệ thống.",
@@ -25,5 +26,15 @@
   "email": "email",
   "noti_dat_lai_mat_khau_trong_email": "Đặt lại mật khẩu trong email.",
   "quay_lai_trang_dang_nhap": "Quay lại trang đăng nhập",
-  "nhap_tin_nhan": "Nhập tin nhắn"
+  "nhap_tin_nhan": "Nhập tin nhắn",
+  "noti_vui_long_nhap_mat_khau": "Vui lòng nhập mật khẩu.",
+  "noti_mat_khau_": "Vui lòng nhập mật khẩu.",
+  "noti_vui_long_nhap_email": "Vui lòng nhập email.",
+  "noti_vui_long_nhap_email_hop_le": "Vui lòng nhập email hợp lệ.",
+  "noti_vui_long_nhap_ten_nguoi_dung": "Vui lòng nhập tên người dùng.",
+  "tim_kiem": "Tìm kiếm",
+  "noti_da_gui_loi_moi_ket_ban": "Đã gửi lời mời kết bạn.",
+  "thong_tin_nguoi_dung": "Thông tin người dùng",
+  "truc_tuyen": "Trực tuyến",
+  "ngoai_tuyen": "Ngoại tuyến"
 }

@@ -1,16 +1,15 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:chat_app/widgets/avatar_template.dart';
 import 'package:flutter/material.dart';
-import '../api/firebase.dart';
 import '../models/chat.dart';
 import '../screens/chat/chat_screen.dart';
-import '../services/current_user_service.dart';
-import '../services/global_key.dart';
+import '../services/from_to_service.dart';
 import '../services/time_converter.dart';
 
 Widget chatItemTemplate(Chat chat, BuildContext context) => InkWell(
       onTap: () {
-        if (chat.to_id.isNotEmpty) {
+        if (chat.id.isNotEmpty) {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -23,13 +22,12 @@ Widget chatItemTemplate(Chat chat, BuildContext context) => InkWell(
       },
       child: Container(
         height: 65,
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.fromLTRB(15, 8, 15, 8),
         child: Row(
           children: [
-            CircleAvatar(
-              maxRadius: 25,
-              backgroundImage: NetworkImage(chat.to_avatar),
-            ),
+            avatarTemplate(
+                url: toUser(chat.members).avatar,
+                online: getStatus(chat.online!, toUser(chat.members).id)),
             const SizedBox(
               width: 10,
             ),
@@ -42,14 +40,10 @@ Widget chatItemTemplate(Chat chat, BuildContext context) => InkWell(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: Text(
-                            chat.to_id == CurrentUser.user.id
-                                ? chat.from_name
-                                : chat.to_name,
+                        child: Text(toUser(chat.members).name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.w400, fontSize: 15)),
+                            style: const TextStyle(fontSize: 16)),
                       ),
                       Text(
                         timestampToDateTime(chat.update_on!),

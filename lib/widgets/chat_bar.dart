@@ -26,8 +26,19 @@ class _ChatBarState extends State<ChatBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).bottomNavigationBarTheme.backgroundColor!,
-      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+      decoration: BoxDecoration(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).bottomAppBarColor,
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, -3),
+          ),
+        ],
+      ),
+      // color: Theme.of(context).bottomAppBarColor,
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
       height: 50,
       width: MediaQuery.of(context).size.width,
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -41,9 +52,10 @@ class _ChatBarState extends State<ChatBar> {
                 controller.text = '';
               },
               padding: const EdgeInsets.all(0),
-              icon: const Icon(
-                Icons.send_outlined,
-                color: colorWhite,
+              icon: Icon(
+                Icons.send,
+                size: 22,
+                color: Theme.of(context).selectedRowColor,
               )),
         ),
       ]),
@@ -51,41 +63,40 @@ class _ChatBarState extends State<ChatBar> {
   }
 
   SizedBox textField(BuildContext context) => SizedBox(
+        height: 35,
         width: MediaQuery.of(context).size.width - 50,
         child: TextField(
           textAlignVertical: TextAlignVertical.center,
           controller: controller,
           keyboardType: TextInputType.multiline,
-          style: const TextStyle(fontSize: 14, color: Colors.black87),
+          style: TextStyle(
+              fontSize: 15, color: Theme.of(context).selectedRowColor),
           decoration: InputDecoration(
-              fillColor:
-                  Theme.of(context).bottomNavigationBarTheme.backgroundColor!,
+              fillColor: Theme.of(context).toggleableActiveColor,
               contentPadding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
               hintText: 'nhap_tin_nhan'.tr(),
               filled: true,
-              hintStyle: const TextStyle(fontSize: 14, color: Colors.grey),
+              hintStyle: const TextStyle(fontSize: 15, color: Colors.grey),
               focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                      width: 0,
-                      color: Theme.of(context)
-                          .bottomNavigationBarTheme
-                          .backgroundColor!),
-                  borderRadius: BorderRadius.circular(0)),
+                    width: 0,
+                    color: Theme.of(context).toggleableActiveColor,
+                  ),
+                  borderRadius: BorderRadius.circular(20)),
               enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
-                      width: 0,
-                      color: Theme.of(context)
-                          .bottomNavigationBarTheme
-                          .backgroundColor!),
-                  borderRadius: BorderRadius.circular(0)),
+                    width: 0,
+                    color: Theme.of(context).toggleableActiveColor,
+                  ),
+                  borderRadius: BorderRadius.circular(20)),
               border: OutlineInputBorder(
                   borderSide: BorderSide(
-                      width: 0,
-                      color: Theme.of(context)
-                          .bottomNavigationBarTheme
-                          .backgroundColor!),
-                  borderRadius: BorderRadius.circular(0))),
-          maxLines: 1,
+                    width: 0,
+                    color: Theme.of(context).toggleableActiveColor,
+                  ),
+                  borderRadius: BorderRadius.circular(20))),
+          maxLines: null,
+          textInputAction: TextInputAction.newline,
         ),
       );
 }

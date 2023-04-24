@@ -6,6 +6,7 @@ import 'package:chat_app/configs/config.dart';
 import 'package:chat_app/helper/data_helper.dart';
 import 'package:chat_app/resources/colors.dart';
 import 'package:chat_app/screens/home/home_screen.dart';
+import 'package:chat_app/widgets/sizedbox_custom.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,10 @@ class _LoginScreenState extends State<LoginScreen> {
   String email = "";
   String password = "";
   String name = "";
+
+  final _formKeyLogin = GlobalKey<FormState>();
+  final _formKeyRegister = GlobalKey<FormState>();
+  final _formKeyForgotPassword = GlobalKey<FormState>();
 
   Future<bool> getData() async {
     if (isInit) {
@@ -78,163 +83,206 @@ class _LoginScreenState extends State<LoginScreen> {
       ));
 
   //form login
-  Widget loginForm() =>
-      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        formTitle('title_dang_nhap'.tr()),
-        space(height: 20),
-        TextFiledEmail(
-          hintText: 'email'.tr(),
-          onChanged: (value) {
-            email = value;
-          },
-          text: email,
-        ),
-        space(),
-        TextFiledPassword(
-          hintText: 'mat_khau'.tr(),
-          onChanged: (value) {
-            password = value;
-          },
-          text: password,
-        ),
-        space(height: 20),
-        Align(
-          alignment: Alignment.centerRight,
-          child: GestureDetector(
-            child: text('quen_mat_khau'.tr()),
-            onTap: () {
-              setState(() {
-                _currentIndex = 2;
-              });
+  Widget loginForm() => Form(
+        key: _formKeyLogin,
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          formTitle('title_dang_nhap'.tr()),
+          height10(value: 20),
+          TextFiledEmail(
+            hintText: 'email'.tr(),
+            onChanged: (value) {
+              email = value;
             },
+            text: email,
           ),
-        ),
-        space(height: 15),
-        buttonCustom('btn_dang_nhap'.tr(), () async {
-          Loading().show();
-          String result = await FirebaseAPI.login(email, password);
-          if (result.isEmpty) {
-            Toast.success('noti_dang_nhap_thanh_cong'.tr());
-            DataService.userLogged(email, password);
-            // ignore: use_build_context_synchronously
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
-            );
-          } else {
-            Toast.message(result);
-          }
-          Loading().hide();
-        }),
-        space(height: 20),
-        FittedBox(
-          child: RichText(
-            overflow: TextOverflow.ellipsis,
-            text: TextSpan(
-              text: 'chua_co_tai_khoan'.tr(),
-              children: <TextSpan>[
-                const TextSpan(text: ' '),
-                TextSpan(
-                    text: 'dang_ky'.tr(),
-                    style: const TextStyle(
-                        color: colorWhite,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        setState(() {
-                          _currentIndex = 1;
-                        });
-                      }),
-              ],
+          height10(),
+          TextFiledPassword(
+            hintText: 'mat_khau'.tr(),
+            onChanged: (value) {
+              password = value;
+            },
+            text: password,
+          ),
+          height10(value: 20),
+          Align(
+            alignment: Alignment.centerRight,
+            child: GestureDetector(
+              child: text('quen_mat_khau'.tr()),
+              onTap: () {
+                setState(() {
+                  _currentIndex = 2;
+                });
+              },
             ),
           ),
-        )
+          height10(value: 15),
+          buttonCustom(
+            'btn_dang_nhap'.tr(),
+            () async {
+              if (_formKeyLogin.currentState!.validate()) {
+                _formKeyLogin.currentState!.save();
 
-        //   ],
-        // ),
-      ]);
-
-  // form register
-  Widget registerForm() =>
-      Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        formTitle('title_dang_ky'.tr()),
-        space(height: 20),
-        TextFiledUserName(
-          hintText: 'ten_nguoi_dung'.tr(),
-          onChanged: (value) => {name = value},
-          text: name,
-        ),
-        space(),
-        TextFiledEmail(
-          hintText: 'email'.tr(),
-          onChanged: (value) {
-            email = value;
-          },
-          text: email,
-        ),
-        space(),
-        TextFiledPassword(
-          hintText: 'mat_khau'.tr(),
-          onChanged: (value) {
-            password = value;
-          },
-          text: password,
-        ),
-        space(height: 20),
-        buttonCustom('btn_dang_ky'.tr(), () async {
-          String register = await FirebaseAPI.register(name, email, password);
-          if (register.isEmpty) {
-            Toast.success('noti_dang_ky_thanh_cong'.tr());
-            setState(() {
-              _currentIndex = 0;
-            });
-          } else {
-            Toast.error(register);
-          }
-        }),
-        space(height: 20),
-        InkWell(
-          onTap: () async {
-            setState(() {
-              _currentIndex = 0;
-            });
-          },
-          child: text('da_co_tai_khoan'.tr()),
-        ),
-      ]);
-//forgot password
-  Widget forgotPasswordForm() => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          formTitle('Forgot password'),
-          space(height: 20),
-          TextFiledEmail(
-              hintText: 'email',
-              onChanged: (value) {
-                email = value;
-              }),
-          space(height: 20),
-          buttonCustom('Reset password', () async {
-            bool forgotPassword = await FirebaseAPI.forgotPassword(email);
-            if (forgotPassword) {
-              Toast.success('noti_dat_lai_mat_khau_trong_email'.tr());
-              setState(() {
-                _currentIndex = 0;
-              });
-            } else {
-              Toast.success('noti_loi_he_thong'.tr());
+                Loading().show();
+                String result = await FirebaseAPI.login(email, password);
+                if (result.isEmpty) {
+                  Toast.success('noti_dang_nhap_thanh_cong'.tr());
+                  DataService.userLogged(email, password);
+                  // ignore: use_build_context_synchronously
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                  );
+                } else {
+                  Toast.message(result);
+                }
+                Loading().hide();
+              }
+            },
+          ),
+          buttonCustom('btn_dang_nhap'.tr(), () async {
+            if (_formKeyLogin.currentState!.validate()) {
+              _formKeyLogin.currentState!.save();
+              await Future.delayed(const Duration(seconds: 5));
             }
           }),
+          height10(value: 20),
+          FittedBox(
+            child: RichText(
+              overflow: TextOverflow.ellipsis,
+              text: TextSpan(
+                text: 'chua_co_tai_khoan'.tr(),
+                children: <TextSpan>[
+                  const TextSpan(text: ' '),
+                  TextSpan(
+                      text: 'dang_ky'.tr(),
+                      style: const TextStyle(
+                          color: colorWhite,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          setState(() {
+                            _currentIndex = 1;
+                          });
+                        }),
+                ],
+              ),
+            ),
+          ),
+        ]),
+      );
+
+  // form register
+  Widget registerForm() => Form(
+        key: _formKeyRegister,
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          formTitle('title_dang_ky'.tr()),
+          height10(value: 20),
+          TextFiledUserName(
+            hintText: 'ten_nguoi_dung'.tr(),
+            onChanged: (value) => {name = value},
+            text: name,
+          ),
+          height10(),
+          TextFiledEmail(
+            hintText: 'email'.tr(),
+            onChanged: (value) {
+              email = value;
+            },
+            text: email,
+          ),
+          height10(),
+          TextFiledPassword(
+            hintText: 'mat_khau'.tr(),
+            onChanged: (value) {
+              password = value;
+            },
+            text: password,
+          ),
+          height10(value: 20),
+          buttonCustom('btn_dang_ky'.tr(), () async {
+            if (_formKeyRegister.currentState!.validate()) {
+              _formKeyRegister.currentState!.save();
+
+              Loading().show();
+              String register =
+                  await FirebaseAPI.register(name, email, password);
+              if (register.isEmpty) {
+                // ignore: use_build_context_synchronously
+                Toast.successAction(
+                    context: context,
+                    message: 'noti_dang_ky_thanh_cong'.tr(),
+                    acction: 'Login',
+                    onPressed: () {
+                      setState(() {
+                        _currentIndex = 0;
+                      });
+                    });
+              } else {
+                Toast.error(register);
+              }
+              Loading().hide();
+            }
+          }),
+          height10(value: 20),
           InkWell(
             onTap: () async {
               setState(() {
                 _currentIndex = 0;
               });
             },
-            child: text('quay_lai_trang_dang_nhap'.tr()),
+            child: text('da_co_tai_khoan'.tr()),
           ),
-        ],
+        ]),
+      );
+
+  Future<bool> run() async {
+    await Future.delayed(Duration(seconds: 5));
+    return true;
+  }
+
+//forgot password
+  Widget forgotPasswordForm() => Form(
+        key: _formKeyForgotPassword,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            formTitle('Forgot password'),
+            height10(value: 20),
+            TextFiledEmail(
+                hintText: 'email',
+                onChanged: (value) {
+                  email = value;
+                }),
+            height10(value: 20),
+            buttonCustom('Reset password', () async {
+              if (_formKeyForgotPassword.currentState!.validate()) {
+                _formKeyForgotPassword.currentState!.save();
+
+                Loading().show();
+                bool forgotPassword = await FirebaseAPI.forgotPassword(email);
+                if (forgotPassword) {
+                  Toast.success('noti_dat_lai_mat_khau_trong_email'.tr());
+                  setState(() {
+                    _currentIndex = 0;
+                  });
+                } else {
+                  Toast.success('noti_loi_he_thong'.tr());
+                }
+                Loading().hide();
+              }
+            }),
+            height10(value: 20),
+            InkWell(
+              onTap: () async {
+                setState(() {
+                  _currentIndex = 0;
+                });
+              },
+              child: text('quay_lai_trang_dang_nhap'.tr()),
+            ),
+          ],
+        ),
       );
 
 //form
@@ -268,10 +316,6 @@ class _LoginScreenState extends State<LoginScreen> {
               color: colorWhite, fontSize: 30, fontFamily: 'Poppins'),
           overflow: TextOverflow.ellipsis,
         ),
-      );
-  //space
-  SizedBox space({double height = 10}) => SizedBox(
-        height: height,
       );
   Widget text(String text) => FittedBox(
         child: Text(

@@ -1,3 +1,5 @@
+import 'package:chat_app/services/validator.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../resources/colors.dart';
 
@@ -27,10 +29,16 @@ class _TextFiledUserNameState extends State<TextFiledUserName> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       onChanged: (value) => {widget.onChanged(value)},
       textAlignVertical: TextAlignVertical.center,
       controller: controller,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'noti_vui_long_nhap_ten_nguoi_dung'.tr();
+        }
+        return null;
+      },
       keyboardType: TextInputType.emailAddress,
       style: const TextStyle(
         fontSize: 15,
@@ -100,10 +108,19 @@ class _TextFiledEmailState extends State<TextFiledEmail> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       onChanged: (value) => {widget.onChanged(value)},
       textAlignVertical: TextAlignVertical.center,
       controller: controller,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'noti_vui_long_nhap_email'.tr();
+        }
+        if (!value.isValidPassword) {
+          return 'noti_vui_long_nhap_email_hop_le'.tr();
+        }
+        return null;
+      },
       keyboardType: TextInputType.emailAddress,
       style: const TextStyle(
         fontSize: 15,
@@ -170,10 +187,19 @@ class _TextFiledPasswordState extends State<TextFiledPassword> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       onChanged: (value) => {widget.onChanged(value)},
       textAlignVertical: TextAlignVertical.center,
       controller: controller,
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'noti_vui_long_nhap_mat_khau'.tr();
+        }
+        if (!value.isValidPassword) {
+          return 'noti_mat_khau_duoc_cung_cap_qua_yeu'.tr();
+        }
+        return null;
+      },
       keyboardType: TextInputType.emailAddress,
 
       /// thay đổi kiểu của password
