@@ -80,6 +80,12 @@ class _TextFiledUserNameState extends State<TextFiledUserName> {
       maxLines: 1,
     );
   }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 }
 
 class TextFiledEmail extends StatefulWidget {
@@ -157,6 +163,12 @@ class _TextFiledEmailState extends State<TextFiledEmail> {
               borderRadius: BorderRadius.circular(10))),
       maxLines: 1,
     );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }
 
@@ -247,5 +259,11 @@ class _TextFiledPasswordState extends State<TextFiledPassword> {
               borderRadius: BorderRadius.circular(10))),
       maxLines: 1,
     );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }

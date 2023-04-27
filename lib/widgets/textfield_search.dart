@@ -62,4 +62,10 @@ class _TextFiledSearchState extends State<TextFiledSearch> {
       maxLines: 1,
     );
   }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 }

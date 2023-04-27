@@ -20,7 +20,7 @@ class ChatScreen extends StatelessWidget {
   static const id = 'chat_screen';
   final Chat chat;
 
-  ChatScreen({super.key, required this.chat});
+  const ChatScreen({super.key, required this.chat});
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +65,10 @@ class ChatScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Icon(Icons.info)
+                  InkWell(
+                    child: const Icon(Icons.info),
+                    onTap: () {},
+                  )
                 ],
               );
             },

@@ -66,10 +66,10 @@ class RequestScreen extends StatelessWidget {
                 return addFriendItemTemplate(
                     user: state.requests[index],
                     onPressed: (value) async {
-                      Loading().show();
+                      Loading.show(context);
                       bool result = await FirebaseAPI.confirmRequest(
                           state.requests[index].id, value);
-                      Loading().hide();
+                      Loading.hide();
                     });
               },
             );

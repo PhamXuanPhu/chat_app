@@ -14,8 +14,9 @@ class SwitchThemeApp extends SettingEvent {
   List<Object> get props => [switchValue];
 }
 
-class ReloadLanguage extends SettingEvent {
-  const ReloadLanguage();
+class ChangeLanguage extends SettingEvent {
+  final String languageCode;
+  const ChangeLanguage({required this.languageCode});
   @override
-  List<Object> get props => [];
+  List<Object> get props => [languageCode];
 }

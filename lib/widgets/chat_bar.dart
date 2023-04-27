@@ -1,9 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-
-import '../resources/colors.dart';
 
 class ChatBar extends StatefulWidget {
   final Function(String) onChanged;
@@ -99,4 +95,9 @@ class _ChatBarState extends State<ChatBar> {
           textInputAction: TextInputAction.newline,
         ),
       );
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 }

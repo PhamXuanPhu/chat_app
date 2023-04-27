@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:chat_app/api/firebase.dart';
@@ -12,12 +11,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 
-import '../resources/assets.dart';
-import '../services/loading_service.dart';
-import '../services/data_service.dart';
-import '../services/toast_service.dart';
-import '../widgets/button_custom.dart';
-import '../widgets/text_filed_custom.dart';
+import '../../resources/assets.dart';
+import '../../services/loading_service.dart';
+import '../../services/data_service.dart';
+import '../../services/toast_service.dart';
+import '../../widgets/button_custom.dart';
+import '../../widgets/text_filed_custom.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -122,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
               if (_formKeyLogin.currentState!.validate()) {
                 _formKeyLogin.currentState!.save();
 
-                Loading().show();
+                Loading.show(context);
                 String result = await FirebaseAPI.login(email, password);
                 if (result.isEmpty) {
                   Toast.success('noti_dang_nhap_thanh_cong'.tr());
@@ -135,14 +134,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 } else {
                   Toast.message(result);
                 }
-                Loading().hide();
+                Loading.hide();
               }
             },
           ),
           buttonCustom('btn_dang_nhap'.tr(), () async {
             if (_formKeyLogin.currentState!.validate()) {
               _formKeyLogin.currentState!.save();
-              await Future.delayed(const Duration(seconds: 5));
+              //   Loadingg.show(context);
+              await Future.delayed(const Duration(milliseconds: 5000));
+//Loadingg.hide();
             }
           }),
           height10(value: 20),
@@ -204,7 +205,7 @@ class _LoginScreenState extends State<LoginScreen> {
             if (_formKeyRegister.currentState!.validate()) {
               _formKeyRegister.currentState!.save();
 
-              Loading().show();
+              Loading.show(context);
               String register =
                   await FirebaseAPI.register(name, email, password);
               if (register.isEmpty) {
@@ -221,7 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
               } else {
                 Toast.error(register);
               }
-              Loading().hide();
+              Loading.hide();
             }
           }),
           height10(value: 20),
@@ -259,7 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
               if (_formKeyForgotPassword.currentState!.validate()) {
                 _formKeyForgotPassword.currentState!.save();
 
-                Loading().show();
+                Loading.show(context);
                 bool forgotPassword = await FirebaseAPI.forgotPassword(email);
                 if (forgotPassword) {
                   Toast.success('noti_dat_lai_mat_khau_trong_email'.tr());
@@ -269,7 +270,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 } else {
                   Toast.success('noti_loi_he_thong'.tr());
                 }
-                Loading().hide();
+                Loading.hide();
               }
             }),
             height10(value: 20),

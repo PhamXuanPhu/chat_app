@@ -35,5 +35,12 @@
   "noti_da_gui_loi_moi_ket_ban": "Friend request sent.",
   "thong_tin_nguoi_dung": "User information",
   "truc_tuyen": "Online",
-  "ngoai_tuyen": "Offline"
+  "ngoai_tuyen": "Offline",
+  "tieng_anh": "English",
+  "tieng_viet": "Vietnamese",
+  "che_do": "Mode",
+  "ngon_ngu": "Language",
+  "trang_thai_hoat_dong": "Active status",
+  "thong_bao": "Notification",
+  "dang_xuat": "Logout"
 }

@@ -6,6 +6,7 @@ class Config {
   static String keyUserName = 'username';
   static String keyPassword = 'password';
   static String keyMode = 'mode';
+  static String keyState = 'mode';
   static String keyLanguage = 'language';
   static Locale english = const Locale('en', 'US');
   static Locale vietnamese = const Locale('vi', 'VN');

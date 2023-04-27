@@ -23,4 +23,12 @@ class DataService {
   static Future<String> getLanguage() async {
     return await DataHelper().getData(Config.keyLanguage);
   }
+
+  static Future<void> setState(bool state) async {
+    await DataHelper().setData(Config.keyState, state);
+  }
+
+  static Future<bool> getState() async {
+    return await DataHelper().getData(Config.keyState);
+  }
 }

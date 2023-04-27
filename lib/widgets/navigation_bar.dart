@@ -43,7 +43,7 @@ Widget bottomNavigationBar(BuildContext context, Function(int) onTabChange) =>
                 ),
                 GButton(
                   padding: const EdgeInsets.all(14),
-                  icon: Icons.language,
+                  icon: Icons.public,
                   text: 'title_cong_dong'.tr(),
                 )
               ]),

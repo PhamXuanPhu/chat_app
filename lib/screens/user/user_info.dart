@@ -61,14 +61,14 @@ class UserInfo extends StatelessWidget {
                 Text(state.user.email),
                 Text(state.user.avatar),
                 buttonCustom('Add Friend', () async {
-                  Loading().show();
+                  Loading.show(context);
                   bool addFriend = await FirebaseAPI.sendRequest(state.user.id);
                   if (addFriend) {
                     Toast.success('noti_da_gui_loi_moi_ket_ban'.tr());
                   } else {
                     Toast.success('noti_loi_he_thong'.tr());
                   }
-                  Loading().hide();
+                  Loading.hide();
                 }),
               ],
             ),

@@ -5,7 +5,7 @@ import 'package:chat_app/blocs/setting/setting_bloc.dart';
 import 'package:chat_app/blocs/user/user_bloc.dart';
 import 'package:chat_app/configs/config.dart';
 import 'package:chat_app/screens/home/home_screen.dart';
-import 'package:chat_app/screens/login_screen.dart';
+import 'package:chat_app/screens/login/login_screen.dart';
 import 'package:chat_app/services/app_router.dart';
 import 'package:chat_app/services/data_service.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -45,9 +45,12 @@ class MainApp extends StatefulWidget {
 
 class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
   bool mode = false;
+  bool notification = false;
+  bool state = false;
 
   Future<void> init() async {
     mode = await DataService.getMode();
+    state = await DataService.getState();
     await Firebase.initializeApp();
     FirebaseAPI.init();
   }
@@ -100,11 +103,13 @@ class _MainAppState extends State<MainApp> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      FirebaseAPI.updateStateUser(true);
-    } else {
-      FirebaseAPI.updateStateUser(false);
+  void didChangeAppLifecycleState(AppLifecycleState appLifecycleState) {
+    if (state) {
+      if (appLifecycleState == AppLifecycleState.resumed) {
+        FirebaseAPI.updateStateUser(true);
+      } else {
+        FirebaseAPI.updateStateUser(false);
+      }
     }
   }
 }
