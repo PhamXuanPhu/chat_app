@@ -10,7 +10,18 @@ class NotificationScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('che_do'.tr()),
       ),
-      body: Container(),
+      body: Container(
+        height: 400,
+        width: 400,
+        color: Colors.red,
+        child: Stack(children: [
+          SafeArea(
+            child: Container(
+              color: Colors.yellow,
+            ),
+          ),
+        ]),
+      ),
     );
   }
 }

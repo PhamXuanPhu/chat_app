@@ -1,3 +1,4 @@
+import 'package:chat_app/widgets/my_sizedbox.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +18,7 @@ class ModeScreen extends StatelessWidget {
         title: Text('che_do'.tr()),
       ),
       body: Container(
+        padding: const EdgeInsets.all(15),
         child: Column(
           children: [
             Row(
@@ -34,13 +36,15 @@ class ModeScreen extends StatelessWidget {
                 )
               ],
             ),
+            height10(value: 20),
             BlocBuilder<SettingBloc, SettingState>(
               builder: (context, state) {
                 return RadioCustom(
+                  selected: state.theme ? 1 : 0,
                   onPressed: (selected) {
                     selected == 0
-                        ? bloc.add(const SwitchThemeApp(switchValue: false))
-                        : bloc.add(const SwitchThemeApp(switchValue: true));
+                        ? bloc.add(const SwitchThemeApp(theme: false))
+                        : bloc.add(const SwitchThemeApp(theme: true));
                   },
                   children: const [
                     MyRadioButton(
@@ -56,6 +60,14 @@ class ModeScreen extends StatelessWidget {
                   ],
                 );
               },
+            ),
+            height10(),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'thong_tin_che_do_hien_thi'.tr(),
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              ),
             ),
           ],
         ),

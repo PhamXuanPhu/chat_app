@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:ui';
 
 import 'package:chat_app/api/firebase.dart';
@@ -5,18 +7,21 @@ import 'package:chat_app/configs/config.dart';
 import 'package:chat_app/helper/data_helper.dart';
 import 'package:chat_app/resources/colors.dart';
 import 'package:chat_app/screens/home/home_screen.dart';
-import 'package:chat_app/widgets/sizedbox_custom.dart';
+import 'package:chat_app/screens/login/text_field.dart';
+import 'package:chat_app/widgets/my_sizedbox.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rive/rive.dart';
 
+import '../../blocs/setting/setting_bloc.dart';
 import '../../resources/assets.dart';
 import '../../services/loading_service.dart';
 import '../../services/data_service.dart';
 import '../../services/toast_service.dart';
-import '../../widgets/button_custom.dart';
-import '../../widgets/text_filed_custom.dart';
+import '../../widgets/my_button.dart';
+import 'button_login.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -38,8 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<bool> getData() async {
     if (isInit) {
-      email = await DataHelper().getData(Config.keyUserName);
-      password = await DataHelper().getData(Config.keyPassword);
+      email = await DataService.getEmail();
+      password = await DataService.getPassword();
       isInit = false;
     }
     return true;
@@ -115,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
           height10(value: 15),
-          buttonCustom(
+          buttonLogin(
             'btn_dang_nhap'.tr(),
             () async {
               if (_formKeyLogin.currentState!.validate()) {
@@ -124,40 +129,41 @@ class _LoginScreenState extends State<LoginScreen> {
                 Loading.show(context);
                 String result = await FirebaseAPI.login(email, password);
                 if (result.isEmpty) {
-                  Toast.success('noti_dang_nhap_thanh_cong'.tr());
                   DataService.userLogged(email, password);
-                  // ignore: use_build_context_synchronously
+                  BlocProvider.of<SettingBloc>(context).add(Init(
+                      theme: Config.user.mode,
+                      languageCode: Config.user.language,
+                      activeStatus: Config.user.active_status));
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => HomeScreen()),
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
                   );
+                  Toast.message(
+                      context: context,
+                      message: 'noti_dang_nhap_thanh_cong'.tr());
                 } else {
-                  Toast.message(result);
+                  Toast.message(context: context, message: result);
                 }
                 Loading.hide();
               }
             },
           ),
-          buttonCustom('btn_dang_nhap'.tr(), () async {
-            if (_formKeyLogin.currentState!.validate()) {
-              _formKeyLogin.currentState!.save();
-              //   Loadingg.show(context);
-              await Future.delayed(const Duration(milliseconds: 5000));
-//Loadingg.hide();
-            }
-          }),
           height10(value: 20),
           FittedBox(
             child: RichText(
               overflow: TextOverflow.ellipsis,
               text: TextSpan(
                 text: 'chua_co_tai_khoan'.tr(),
+                style: const TextStyle(
+                  color: colorText,
+                  fontSize: 14,
+                ),
                 children: <TextSpan>[
                   const TextSpan(text: ' '),
                   TextSpan(
                       text: 'dang_ky'.tr(),
                       style: const TextStyle(
-                          color: colorWhite,
+                          color: colorText,
                           fontSize: 14,
                           fontWeight: FontWeight.bold),
                       recognizer: TapGestureRecognizer()
@@ -201,7 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
             text: password,
           ),
           height10(value: 20),
-          buttonCustom('btn_dang_ky'.tr(), () async {
+          buttonLogin('btn_dang_ky'.tr(), () async {
             if (_formKeyRegister.currentState!.validate()) {
               _formKeyRegister.currentState!.save();
 
@@ -210,17 +216,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   await FirebaseAPI.register(name, email, password);
               if (register.isEmpty) {
                 // ignore: use_build_context_synchronously
-                Toast.successAction(
-                    context: context,
-                    message: 'noti_dang_ky_thanh_cong'.tr(),
-                    acction: 'Login',
-                    onPressed: () {
-                      setState(() {
-                        _currentIndex = 0;
-                      });
-                    });
+                Toast.message(
+                  context: context,
+                  message: 'noti_dang_ky_thanh_cong'.tr(),
+                );
               } else {
-                Toast.error(register);
+                Toast.message(context: context, message: register);
               }
               Loading.hide();
             }
@@ -237,11 +238,6 @@ class _LoginScreenState extends State<LoginScreen> {
         ]),
       );
 
-  Future<bool> run() async {
-    await Future.delayed(Duration(seconds: 5));
-    return true;
-  }
-
 //forgot password
   Widget forgotPasswordForm() => Form(
         key: _formKeyForgotPassword,
@@ -256,19 +252,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   email = value;
                 }),
             height10(value: 20),
-            buttonCustom('Reset password', () async {
+            buttonLogin('Reset password', () async {
               if (_formKeyForgotPassword.currentState!.validate()) {
                 _formKeyForgotPassword.currentState!.save();
 
                 Loading.show(context);
                 bool forgotPassword = await FirebaseAPI.forgotPassword(email);
                 if (forgotPassword) {
-                  Toast.success('noti_dat_lai_mat_khau_trong_email'.tr());
+                  Toast.message(
+                      context: context,
+                      message: 'noti_dat_lai_mat_khau_trong_email'.tr());
                   setState(() {
                     _currentIndex = 0;
                   });
                 } else {
-                  Toast.success('noti_loi_he_thong'.tr());
+                  Toast.message(
+                      context: context, message: 'noti_loi_he_thong'.tr());
                 }
                 Loading.hide();
               }
@@ -294,18 +293,16 @@ class _LoginScreenState extends State<LoginScreen> {
             filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
             child: Wrap(children: [
               AnimatedContainer(
+                padding: const EdgeInsets.fromLTRB(20, 30, 20, 50),
                 curve: Curves.easeInOut,
                 duration: const Duration(milliseconds: 500),
                 width: _currentIndex == index
                     ? MediaQuery.of(context).size.width * 0.8
                     : 0,
                 decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white),
+                    border: Border.all(color: colorText),
                     borderRadius: BorderRadius.circular(20)),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 30, 20, 40),
-                  child: child,
-                ),
+                child: child,
               ),
             ]),
           )));
@@ -314,14 +311,14 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Text(
           text,
           style: const TextStyle(
-              color: colorWhite, fontSize: 30, fontFamily: 'Poppins'),
+              color: colorText, fontSize: 30, fontFamily: 'Poppins'),
           overflow: TextOverflow.ellipsis,
         ),
       );
   Widget text(String text) => FittedBox(
         child: Text(
           text,
-          style: const TextStyle(color: colorWhite, fontSize: 14),
+          style: const TextStyle(color: colorText, fontSize: 14),
         ),
       );
 }

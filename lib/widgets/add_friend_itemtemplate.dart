@@ -1,12 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:chat_app/api/firebase.dart';
 import 'package:chat_app/models/user.dart';
-import 'package:chat_app/resources/colors.dart';
-import 'package:chat_app/widgets/sizedbox_custom.dart';
+import 'package:chat_app/widgets/my_sizedbox.dart';
 import 'package:flutter/material.dart';
-import '../services/loading_service.dart';
-import 'button_custom.dart';
 
 Widget addFriendItemTemplate(
         {required User user, required Function(bool) onPressed}) =>

@@ -1,14 +1,9 @@
-import 'package:chat_app/services/current_user_service.dart';
-import 'package:chat_app/widgets/user_itemtemplate.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../api/firebase.dart';
 import '../../blocs/user/user_bloc.dart';
-import '../../models/user.dart';
 import '../../services/loading_service.dart';
 import '../../widgets/add_friend_itemtemplate.dart';
-import '../../widgets/textfield_search.dart';
 
 // Widget requests() => Padding(
 //       padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
@@ -56,7 +51,7 @@ class RequestScreen extends StatelessWidget {
     FirebaseAPI.getRequests(bloc);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
       child: BlocBuilder<UserBloc, UserState>(
           bloc: bloc,
           builder: (context, state) {
@@ -67,7 +62,7 @@ class RequestScreen extends StatelessWidget {
                     user: state.requests[index],
                     onPressed: (value) async {
                       Loading.show(context);
-                      bool result = await FirebaseAPI.confirmRequest(
+                      await FirebaseAPI.confirmRequest(
                           state.requests[index].id, value);
                       Loading.hide();
                     });

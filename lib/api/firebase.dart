@@ -1,5 +1,8 @@
+// ignore_for_file: unused_import
+
 import 'dart:async';
 
+import 'package:chat_app/blocs/setting/setting_bloc.dart';
 import 'package:chat_app/models/user.dart' as models;
 import 'package:chat_app/services/chat_id_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,9 +12,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/user/user_bloc.dart';
 import '../configs/config.dart';
+import '../helper/data_helper.dart';
 import '../models/chat.dart';
 import '../models/message.dart';
-import '../services/current_user_service.dart';
+import '../services/data_service.dart';
 
 class FirebaseAPI {
   static late FirebaseAuth auth;
@@ -27,7 +31,7 @@ class FirebaseAPI {
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
           email: email, password: password);
       if (userCredential.user != null) {
-        await getUserLogin();
+        Config.user = await getUser(userCredential.user!.uid);
         return "";
       } else {
         return 'noti_loi_he_thong'.tr();
@@ -42,11 +46,32 @@ class FirebaseAPI {
     return 'noti_loi_he_thong'.tr();
   }
 
+  static Future<models.User> reLogin() async {
+    try {
+      String email = await DataService.getEmail();
+      String password = await DataService.getPassword();
+      UserCredential userCredential =
+          await auth.currentUser!.reauthenticateWithCredential(
+        EmailAuthProvider.credential(
+          email: email,
+          password: password,
+        ),
+      );
+      if (userCredential.user != null) {
+        return getUser(userCredential.user!.uid);
+      } else {
+        return models.User();
+      }
+    } on FirebaseAuthException catch (e) {
+      throw Exception();
+    }
+  }
+
   static Future<bool> checkLogin() async {
     var completer = Completer<bool>();
-    auth.authStateChanges().listen((User? user) {
+    auth.authStateChanges().listen((User? user) async {
       if (user != null) {
-        getUserLogin();
+        Config.user = await getUser(user.uid);
         completer.complete(true);
       } else {
         completer.complete(false);
@@ -73,11 +98,11 @@ class FirebaseAPI {
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        'noti_mat_khau_duoc_cung_cap_qua_yeu'.tr();
+        return 'noti_mat_khau_duoc_cung_cap_qua_yeu'.tr();
       } else if (e.code == 'email-already-in-use') {
-        'noti_tai_khoan_da_ton_tai_cho_email_do'.tr();
+        return 'noti_tai_khoan_da_ton_tai_cho_email_do'.tr();
       }
-    } catch (e) {}
+    }
     return 'noti_loi_he_thong'.tr();
   }
 
@@ -93,6 +118,9 @@ class FirebaseAPI {
         'contact_array': FieldValue.arrayUnion(['0']),
         'request_array': FieldValue.arrayUnion(['0']),
         'send_array': FieldValue.arrayUnion(['0']),
+        'mode': false,
+        'language': Config.vnCode,
+        'active_status': true,
       };
       docRef.set(data);
       return true;
@@ -195,25 +223,6 @@ class FirebaseAPI {
     }
   }
 
-  static Future<void> getUserLogin() async {
-    try {
-      firestore
-          .collection(Config.users)
-          .doc(auth.currentUser!.uid)
-          .withConverter<models.User>(
-              fromFirestore: (snapshot, _) =>
-                  models.User.fromMap(snapshot.data()!),
-              toFirestore: (user, _) => user.toMap())
-          .snapshots()
-          .listen((event) {
-        CurrentUser.user = event.data()!;
-      });
-      await updateStateUser(true);
-    } on FirebaseAuthException catch (e) {
-      throw Exception();
-    }
-  }
-
   static Future<bool> sendRequest(String id) async {
     try {
       final from =
@@ -283,10 +292,10 @@ class FirebaseAPI {
   static Future<Chat> getChat(models.User contact) async {
     try {
       var from = <String, dynamic>{
-        'id': CurrentUser.user.id,
-        'name': CurrentUser.user.name,
-        'email': CurrentUser.user.email,
-        'avatar': CurrentUser.user.avatar,
+        'id': Config.user.id,
+        'name': Config.user.name,
+        'email': Config.user.email,
+        'avatar': Config.user.avatar,
       };
 
       var to = <String, dynamic>{
@@ -297,13 +306,13 @@ class FirebaseAPI {
       };
 
       var online = <String, dynamic>{
-        CurrentUser.user.id: true,
+        Config.user.id: true,
         contact.id: false,
       };
 
       List<Map<String, dynamic>> members = [to, from];
-      var members_array = [CurrentUser.user.id, contact.id];
-      var chatid = chatID(CurrentUser.user.id, contact.id);
+      var members_array = [Config.user.id, contact.id];
+      var chatid = chatID(Config.user.id, contact.id);
       final docRef = firestore.collection(Config.chatroooms).doc(chatid);
 
       var documentSnapshot = await docRef.get();
@@ -392,22 +401,136 @@ class FirebaseAPI {
     }
   }
 
-  static Future<void> listenUser(UserBloc userBloc, String userID) async {
+  static Future<void> listenUser() async {
     try {
       firestore
           .collection(Config.users)
-          .doc(userID)
+          .doc(auth.currentUser!.uid)
           .withConverter<models.User>(
               fromFirestore: (snapshot, _) =>
                   models.User.fromMap(snapshot.data()!),
               toFirestore: (user, _) => user.toMap())
           .snapshots()
           .listen((event) {
-        var requests = event.data();
-        userBloc.add(ListenUser(user: requests!));
+        Config.user = event.data()!;
       });
     } on FirebaseAuthException catch (e) {
       throw Exception();
+    }
+  }
+
+  static Future<String> changePassword(String newPassword) async {
+    try {
+      UserCredential userCredential =
+          await auth.currentUser!.reauthenticateWithCredential(
+        EmailAuthProvider.credential(
+          email: Config.user.email,
+          password: Config.password,
+        ),
+      );
+      await userCredential.user!.updatePassword(newPassword);
+      return '';
+    } on FirebaseAuthException catch (e) {
+      return e.message!;
+    } catch (e) {}
+    return 'noti_loi_he_thong'.tr();
+  }
+
+  static Future<String> deleteAccount() async {
+    try {
+      UserCredential userCredential =
+          await auth.currentUser!.reauthenticateWithCredential(
+        EmailAuthProvider.credential(
+          email: Config.user.email,
+          password: Config.password,
+        ),
+      );
+      // xóa user
+      await userCredential.user!.delete();
+      // update user
+      final docRef = firestore.collection(Config.users).doc(Config.user.id);
+      await docRef.update({
+        'online': false,
+        'deleted': true,
+      });
+      //update chat
+      final documents = await FirebaseFirestore.instance
+          .collection(Config.chatroooms)
+          .where('members_array', arrayContains: Config.user.id)
+          .get();
+
+      for (final doc in documents.docs) {
+        await doc.reference.update({'deleted.${Config.user.id}': true});
+      }
+      return '';
+    } on FirebaseAuthException catch (e) {
+      return e.message!;
+    } catch (e) {}
+    return 'noti_loi_he_thong'.tr();
+  }
+
+  static Stream<DocumentSnapshot<models.User>> streamOnline(String userID) {
+    try {
+      var querySnapshot = firestore
+          .collection(Config.users)
+          .doc(userID)
+          .withConverter<models.User>(
+              fromFirestore: (snapshot, _) =>
+                  models.User.fromMap(snapshot.data()!),
+              toFirestore: (user, _) => user.toMap())
+          .snapshots();
+      return querySnapshot;
+    } on FirebaseAuthException catch (e) {
+      //  Toast.show(e.message!);
+      throw Exception(e);
+    }
+  }
+
+  static Future<void> updateActiveStatus(bool activeStatus) async {
+    try {
+      final docRef = firestore.collection(Config.users).doc(Config.user.id);
+      docRef.update({
+        'active_status': activeStatus,
+      });
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  static Future<void> updateMode(bool mode) async {
+    try {
+      final docRef = firestore.collection(Config.users).doc(Config.user.id);
+      docRef.update({
+        'mode': mode,
+      });
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  static Future<void> updateLanguage(String language) async {
+    try {
+      final docRef = firestore.collection(Config.users).doc(Config.user.id);
+      docRef.update({
+        'language': language,
+      });
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  static Future<bool> updateUserInformation(models.User user) async {
+    try {
+      Map<String, dynamic> data = {
+        'name': user.name,
+        'email': user.email,
+      };
+      final docRef = firestore.collection(Config.users).doc(Config.user.id);
+      docRef.update(data);
+      return true;
+    } on FirebaseAuthException catch (e) {
+      return false;
+      throw Exception(e);
     }
   }
 }

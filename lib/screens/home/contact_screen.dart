@@ -15,7 +15,7 @@ class ContactsScreen extends StatelessWidget {
     FirebaseAPI.getContacts(bloc);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
       child: BlocBuilder<UserBloc, UserState>(
           bloc: bloc,
           builder: (context, state) {

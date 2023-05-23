@@ -5,7 +5,7 @@ import '../../models/chat.dart';
 import '../../widgets/chat_itemtemplate.dart';
 
 Widget chat() => Padding(
-      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
       child: StreamBuilder(
           stream: FirebaseAPI.getChats(),
           builder: (context, snapshot) {

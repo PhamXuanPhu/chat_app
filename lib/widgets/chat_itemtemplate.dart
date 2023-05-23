@@ -54,6 +54,7 @@ Widget chatItemTemplate(Chat chat, BuildContext context) => InkWell(
                   ),
                   Text(
                     chat.last_message,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],

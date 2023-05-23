@@ -5,7 +5,7 @@ extension Validator on String {
         .hasMatch(this);
   }
 
-//ít nhất 8 kí tự, có 1 kí tự đặc biệt và 1 kí tự in hoa
+//ít nhất 8 kí tự
   bool get isValidPassword {
     return RegExp(r'^(?=.*[A-Za-z]).{8,}$').hasMatch(this);
   }

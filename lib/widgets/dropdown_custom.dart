@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 class CustomDropdownButton<T> extends StatefulWidget {
@@ -6,6 +8,7 @@ class CustomDropdownButton<T> extends StatefulWidget {
   final ValueChanged<T>? onChanged;
 
   const CustomDropdownButton({
+    super.key,
     required this.items,
     this.value,
     this.onChanged,
@@ -105,7 +108,8 @@ class _CustomDropdownButtonState<T> extends State<CustomDropdownButton<T>> {
                     style: TextStyle(
                       fontSize: 16.0,
                       color: widget.items[index] == widget.value
-                          ? Theme.of(context).accentColor
+                          ? Colors.black
+                          // ? Theme.of(context).accentColor
                           : Colors.black,
                     ),
                   ),
@@ -130,7 +134,6 @@ class DropDownIcon extends StatefulWidget {
 class _DropDownIconState extends State<DropDownIcon> {
   bool _isExpanded = false;
   OverlayEntry? _overlayEntry;
-  final _key = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -169,8 +172,8 @@ class _DropDownIconState extends State<DropDownIcon> {
           top: offset.dy + size.height,
           width: 200,
           child: Container(
-            child: widget.item,
             color: Colors.red,
+            child: widget.item,
           ));
     });
   }

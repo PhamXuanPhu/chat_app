@@ -35,9 +35,15 @@ class LoadRequests extends UserEvent {
   List<Object> get props => [requests];
 }
 
-class ListenUser extends UserEvent {
-  final User user;
-  const ListenUser({required this.user});
+class LoadCurrentUser extends UserEvent {
+  const LoadCurrentUser();
   @override
-  List<Object> get props => [user];
+  List<Object> get props => [];
+}
+
+class UpdateCurrentUser extends UserEvent {
+  final User newData;
+  const UpdateCurrentUser({required this.newData});
+  @override
+  List<Object> get props => [newData];
 }

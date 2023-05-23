@@ -3,7 +3,7 @@ import 'package:chat_app/screens/home/request_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-import '../../widgets/mydrawer.dart';
+import '../../widgets/my_drawer.dart';
 import '../../widgets/navigation_bar.dart';
 import 'chats_screen.dart';
 import 'contact_screen.dart';

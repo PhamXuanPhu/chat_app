@@ -32,9 +32,9 @@ class Chat extends Equatable {
     return Chat(
       id: map['id'] ?? "",
       last_message: map['last_message'] ?? "",
-      update_on: map['update_on'] ?? null,
+      update_on: map['update_on'],
       members: map['members'] ?? const <dynamic>[],
-      online: map['online'] ?? null,
+      online: map['online'],
     );
   }
 

@@ -1,18 +1,23 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first, non_constant_identifier_names
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: non_constant_identifier_names
 
 import 'package:equatable/equatable.dart';
 
+// ignore: must_be_immutable
 class User extends Equatable {
-  final String id;
-  final String name;
-  final String email;
-  final String avatar;
-  final List<dynamic> contact_array;
-  final List<dynamic> request_array;
-  final List<dynamic> send_array;
-  final bool online;
+  String id;
+  String name;
+  String email;
+  String avatar;
+  List<dynamic> contact_array;
+  List<dynamic> request_array;
+  List<dynamic> send_array;
+  bool online;
+  bool mode;
+  String language;
+  bool active_status;
 
-  const User({
+  User({
     this.id = '',
     this.name = '',
     this.email = '',
@@ -21,19 +26,10 @@ class User extends Equatable {
     this.request_array = const <dynamic>[],
     this.send_array = const <dynamic>[],
     this.online = false,
+    this.mode = false,
+    this.language = '',
+    this.active_status = false,
   });
-
-  @override
-  List<Object?> get props => [
-        id,
-        name,
-        email,
-        avatar,
-        request_array,
-        contact_array,
-        send_array,
-        online
-      ];
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -45,6 +41,9 @@ class User extends Equatable {
       'request_array': request_array,
       'send_array': send_array,
       'online': online,
+      'mode': mode,
+      'language': language,
+      'active_status': active_status,
     };
   }
 
@@ -58,6 +57,52 @@ class User extends Equatable {
       request_array: map['request_array'] ?? const <dynamic>[],
       send_array: map['send_array'] ?? const <dynamic>[],
       online: map['online'] ?? false,
+      mode: map['mode'] ?? false,
+      language: map['language'] ?? "",
+      active_status: map['active_status'] ?? true,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+        id,
+        name,
+        email,
+        avatar,
+        contact_array,
+        request_array,
+        send_array,
+        online,
+        mode,
+        language,
+        active_status,
+      ];
+
+  User copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? avatar,
+    List<dynamic>? contact_array,
+    List<dynamic>? request_array,
+    List<dynamic>? send_array,
+    bool? online,
+    bool? mode,
+    String? language,
+    bool? active_status,
+  }) {
+    return User(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      avatar: avatar ?? this.avatar,
+      contact_array: contact_array ?? this.contact_array,
+      request_array: request_array ?? this.request_array,
+      send_array: send_array ?? this.send_array,
+      online: online ?? this.online,
+      mode: mode ?? this.mode,
+      language: language ?? this.language,
+      active_status: active_status ?? this.active_status,
     );
   }
 }

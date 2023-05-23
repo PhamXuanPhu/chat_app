@@ -10,11 +10,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../api/firebase.dart';
 import '../../blocs/user/user_bloc.dart';
-import '../../services/current_user_service.dart';
+import '../../configs/config.dart';
 import '../../services/from_to_service.dart';
 import '../../widgets/avatar_template.dart';
 import '../../widgets/message_itemtemplate.dart';
-import '../../widgets/sizedbox_custom.dart';
+import '../../widgets/my_sizedbox.dart';
 
 class ChatScreen extends StatelessWidget {
   static const id = 'chat_screen';
@@ -26,35 +26,32 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     //get user
     User to = toUser(chat.members);
-    // listen user
-    final bloc = BlocProvider.of<UserBloc>(context);
-    FirebaseAPI.listenUser(bloc, to.id);
 
     return Scaffold(
       appBar: AppBar(
-          leadingWidth: 30.0,
-          title: BlocBuilder<UserBloc, UserState>(
-            bloc: bloc,
-            builder: (context, state) {
+        leadingWidth: 30.0,
+        title: StreamBuilder(
+          stream: FirebaseAPI.streamOnline(to.id),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              var userTo = snapshot.data!.data();
               return Row(
                 children: [
                   avatarTemplate(
-                      url: state.user.avatar,
-                      online: state.user.online,
-                      radius: 18),
+                      url: userTo!.avatar, online: userTo.online, radius: 18),
                   width10(value: 8),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          state.user.name,
+                          userTo.name,
                           style: const TextStyle(
                             fontSize: 16,
                           ),
                         ),
                         Text(
-                          state.user.online
+                          userTo.online
                               ? 'truc_tuyen'.tr()
                               : 'ngoai_tuyen'.tr(),
                           style: TextStyle(
@@ -71,8 +68,12 @@ class ChatScreen extends StatelessWidget {
                   )
                 ],
               );
-            },
-          )),
+            } else {
+              return Container();
+            }
+          },
+        ),
+      ),
       body: Column(
         children: [
           Expanded(
@@ -105,7 +106,7 @@ class ChatScreen extends StatelessWidget {
                 Message mess = Message(
                     id: GUID.generate(),
                     chat_id: chat.id,
-                    from_id: CurrentUser.user.id,
+                    from_id: Config.user.id,
                     message: message,
                     update_on: Timestamp.now(),
                     to_id: to.id,

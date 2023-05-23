@@ -14,7 +14,7 @@ class CommunityScreen extends StatelessWidget {
     FirebaseAPI.getUsers(bloc);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
       child: BlocBuilder<UserBloc, UserState>(
           bloc: bloc,
           builder: (context, state) {
@@ -23,11 +23,12 @@ class CommunityScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 return InkWell(
                     onTap: () async {
-                      bloc.add(LoadUser(userID: state.users[index].id));
+                      // bloc.add(LoadUser(userID: state.users[index].id));
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const UserInfo(),
+                          builder: (context) =>
+                              UserInfo(userID: state.users[index].id),
                         ),
                       );
                     },
