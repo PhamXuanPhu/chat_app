@@ -21,6 +21,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
     on<LoadRequests>(_onLoadRequests);
     on<LoadCurrentUser>(_onLoadCurrentUser);
     on<UpdateCurrentUser>(_onUpdateCurrentUser);
+    on<UpdateAvatar>(_onUpdateAvatar);
   }
   void _onLoadUsers(LoadUsers event, Emitter<UserState> emit) async {
     try {
@@ -85,28 +86,32 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   void _onLoadCurrentUser(
       LoadCurrentUser event, Emitter<UserState> emit) async {
-    emit(UserLoading(
-        contacts: state.contacts,
-        requests: state.requests,
-        users: state.users,
-        currentUser: state.currentUser,
-        user: state.user));
-    var result = await FirebaseAPI.getUser(Config.user.id);
-    if (result.id.isNotEmpty) {
-      emit(UserLoaded(
+    try {
+      emit(UserLoading(
           contacts: state.contacts,
           requests: state.requests,
           users: state.users,
-          currentUser: result,
+          currentUser: state.currentUser,
           user: state.user));
-    } else {
-      emit(UserError(
-          contacts: state.contacts,
-          requests: state.requests,
-          users: state.users,
-          currentUser: result,
-          user: state.user,
-          message: 'Error'));
+      var result = await FirebaseAPI.getUser(Config.user.id);
+      if (result.id.isNotEmpty) {
+        emit(UserLoaded(
+            contacts: state.contacts,
+            requests: state.requests,
+            users: state.users,
+            currentUser: result,
+            user: state.user));
+      } else {
+        emit(UserError(
+            contacts: state.contacts,
+            requests: state.requests,
+            users: state.users,
+            currentUser: result,
+            user: state.user,
+            message: 'Error'));
+      }
+    } catch (e) {
+      throw Exception(e);
     }
   }
 
@@ -126,6 +131,33 @@ class UserBloc extends Bloc<UserEvent, UserState> {
           requests: state.requests,
           users: state.users,
           currentUser: event.newData,
+          user: state.user));
+    } else {
+      emit(UserError(
+          contacts: state.contacts,
+          requests: state.requests,
+          users: state.users,
+          currentUser: state.currentUser,
+          user: state.user,
+          message: 'Error'));
+    }
+  }
+
+  void _onUpdateAvatar(UpdateAvatar event, Emitter<UserState> emit) async {
+    emit(UserLoading(
+        contacts: state.contacts,
+        requests: state.requests,
+        users: state.users,
+        currentUser: state.currentUser,
+        user: state.user));
+    var result = await FirebaseAPI.updateUserAvatar(event.newData);
+    if (result) {
+      state.currentUser.avatar = event.newData;
+      emit(UserLoaded(
+          contacts: state.contacts,
+          requests: state.requests,
+          users: state.users,
+          currentUser: state.currentUser,
           user: state.user));
     } else {
       emit(UserError(

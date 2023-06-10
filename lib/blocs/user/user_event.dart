@@ -47,3 +47,10 @@ class UpdateCurrentUser extends UserEvent {
   @override
   List<Object> get props => [newData];
 }
+
+class UpdateAvatar extends UserEvent {
+  final String newData;
+  const UpdateAvatar({required this.newData});
+  @override
+  List<Object> get props => [newData];
+}

@@ -23,7 +23,7 @@
   "noti_dang_ky_thanh_cong": "Register successful.",
   "noti_mat_khau_duoc_cung_cap_qua_yeu": "The password provided is too weak.",
   "noti_tai_khoan_da_ton_tai_cho_email_do": "The account already exists for that email.",
-  "email": "email",
+  "email": "Email",
   "noti_dat_lai_mat_khau_trong_email": "Reset password in your email.",
   "quay_lai_trang_dang_nhap": "Back to login",
   "nhap_tin_nhan": "Send message",
@@ -86,5 +86,11 @@
   "xa_phuong": "Ward",
   "chon_xa_phuong": "Choose Ward",
   "ngay_sinh": "Birthday",
-  "chon_ngay_sinh": "Choose birthday"
+  "chon_ngay_sinh": "Choose birthday",
+  "format_birthday": "MM-dd-yyyy",
+  "noti_thay_doi_thong_tin_thanh_cong": "Information changed successfully.",
+  "thong_tin": "Information",
+  "so_dien_thoai": "Phone number",
+  "noti_vui_long_nhap_so_dien_thoai": "Please enter your phone number.",
+  "noti_vui_long_nhap_so_dien_thoai_hop_le": "Please enter a valid phone number."
 }

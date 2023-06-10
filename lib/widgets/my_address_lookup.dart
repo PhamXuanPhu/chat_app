@@ -16,12 +16,12 @@ class MyAddressLookup extends StatefulWidget {
       {super.key,
       required this.hintText,
       this.validator,
-      required this.address,
+      this.address,
       required this.submit});
 
   final String hintText;
   final String? Function(String)? validator;
-  final Address address;
+  final Address? address;
   final Function(Address) submit;
 
   @override
@@ -47,9 +47,25 @@ class _MyAddressLookupState extends State<MyAddressLookup> {
       controller.addListener(() => setState(() {}));
     }
 
-    if (widget.address.street.isNotEmpty) {
-      controller.text = widget.address.address;
-      address = widget.address;
+    if (widget.address != null && widget.address!.street.isNotEmpty) {
+      controller.text = widget.address!.address;
+      address = widget.address!;
+      loadInitList();
+    }
+  }
+
+  Future<void> loadInitList() async {
+    if (address.countryId.isNotEmpty && address.countryId == '190') {
+      var result = await API().getProvinces();
+      provinces.addAll(result);
+    }
+    if (address.provinceId.isNotEmpty) {
+      var result = await API().getDistricts(address.provinceId);
+      districts.addAll(result);
+    }
+    if (address.districtId.isNotEmpty) {
+      var result = await API().getWards(address.districtId);
+      wards.addAll(result);
     }
   }
 
@@ -63,7 +79,10 @@ class _MyAddressLookupState extends State<MyAddressLookup> {
       controller: controller,
       readOnly: true,
       validator: (value) {
-        return widget.validator!(value!);
+        if (widget.validator != null) {
+          return widget.validator!(value!);
+        }
+        return null;
       },
       style: TextStyle(
         fontSize: 15,
@@ -248,10 +267,10 @@ class _MyAddressLookupState extends State<MyAddressLookup> {
                             hintText: 'chon_xa_phuong'.tr(),
                             controller: wardController,
                             selectItem: SelectItem(
-                                id: address.wardtId, name: address.wardName),
+                                id: address.wardId, name: address.wardName),
                             selected: (value) {
-                              if (value.id != address.wardtId) {
-                                address.wardtId = value.id;
+                              if (value.id != address.wardId) {
+                                address.wardId = value.id;
                                 address.wardName = value.name;
 
                                 streetController.clear();
@@ -294,7 +313,7 @@ class _MyAddressLookupState extends State<MyAddressLookup> {
     provinceController.clear();
     address.provinceId = '';
     address.provinceName = '';
-    if (address.countryId.isNotEmpty) {
+    if (address.countryId.isNotEmpty && address.countryId == '190') {
       var result = await API().getProvinces();
       provinces.addAll(result);
     } else {
@@ -316,7 +335,7 @@ class _MyAddressLookupState extends State<MyAddressLookup> {
 
   Future<void> loadWards() async {
     wardController.clear();
-    address.wardtId = '';
+    address.wardId = '';
     address.wardName = '';
     if (address.districtId.isNotEmpty) {
       var result = await API().getWards(address.districtId);

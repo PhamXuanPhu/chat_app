@@ -9,4 +9,8 @@ extension Validator on String {
   bool get isValidPassword {
     return RegExp(r'^(?=.*[A-Za-z]).{8,}$').hasMatch(this);
   }
+
+  bool get isValidPhoneNumber {
+    return RegExp(r'^0[^0146]\d{8}$').hasMatch(this);
+  }
 }

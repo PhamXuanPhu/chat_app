@@ -16,7 +16,19 @@ class User extends Equatable {
   bool mode;
   String language;
   bool active_status;
-
+  String country_id;
+  String country_name;
+  String province_id;
+  String province_name;
+  String district_id;
+  String district_name;
+  String ward_id;
+  String ward_name;
+  String street;
+  String address;
+  String gender;
+  String birthday;
+  String phone;
   User({
     this.id = '',
     this.name = '',
@@ -29,6 +41,19 @@ class User extends Equatable {
     this.mode = false,
     this.language = '',
     this.active_status = false,
+    this.country_id = '',
+    this.country_name = '',
+    this.province_id = '',
+    this.province_name = '',
+    this.district_id = '',
+    this.district_name = '',
+    this.ward_id = '',
+    this.ward_name = '',
+    this.street = '',
+    this.address = '',
+    this.gender = '',
+    this.birthday = '',
+    this.phone = '',
   });
 
   Map<String, dynamic> toMap() {
@@ -44,6 +69,19 @@ class User extends Equatable {
       'mode': mode,
       'language': language,
       'active_status': active_status,
+      'country_id': country_id,
+      'country_name': country_name,
+      'province_id': province_id,
+      'province_name': province_name,
+      'district_id': district_id,
+      'district_name': district_name,
+      'ward_id': ward_id,
+      'ward_name': ward_name,
+      'ward': street,
+      'address': address,
+      'gender': gender,
+      'birthday': birthday,
+      'phone': phone,
     };
   }
 
@@ -60,6 +98,19 @@ class User extends Equatable {
       mode: map['mode'] ?? false,
       language: map['language'] ?? "",
       active_status: map['active_status'] ?? true,
+      country_id: map['country_id'] ?? "",
+      country_name: map['country_name'] ?? "",
+      province_id: map['province_id'] ?? "",
+      province_name: map['province_name'] ?? "",
+      district_id: map['district_id'] ?? "",
+      district_name: map['district_name'] ?? "",
+      ward_id: map['ward_id'] ?? "",
+      ward_name: map['ward_name'] ?? "",
+      street: map['street'] ?? "",
+      address: map['address'] ?? "",
+      gender: map['gender'] ?? "",
+      birthday: map['birthday'] ?? "",
+      phone: map['phone'] ?? "",
     );
   }
 
@@ -76,21 +127,46 @@ class User extends Equatable {
         mode,
         language,
         active_status,
+        country_id,
+        country_name,
+        province_id,
+        province_name,
+        district_id,
+        district_name,
+        street,
+        address,
+        ward_id,
+        ward_name,
+        gender,
+        birthday,
+        phone
       ];
 
-  User copyWith({
-    String? id,
-    String? name,
-    String? email,
-    String? avatar,
-    List<dynamic>? contact_array,
-    List<dynamic>? request_array,
-    List<dynamic>? send_array,
-    bool? online,
-    bool? mode,
-    String? language,
-    bool? active_status,
-  }) {
+  User copyWith(
+      {String? id,
+      String? name,
+      String? email,
+      String? avatar,
+      List<dynamic>? contact_array,
+      List<dynamic>? request_array,
+      List<dynamic>? send_array,
+      bool? online,
+      bool? mode,
+      String? language,
+      bool? active_status,
+      String? country_id,
+      String? country_name,
+      String? province_id,
+      String? province_name,
+      String? district_id,
+      String? district_name,
+      String? ward_id,
+      String? ward_name,
+      String? street,
+      String? address,
+      String? gender,
+      String? birthday,
+      String? phone}) {
     return User(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -103,6 +179,19 @@ class User extends Equatable {
       mode: mode ?? this.mode,
       language: language ?? this.language,
       active_status: active_status ?? this.active_status,
+      country_id: country_id ?? this.country_id,
+      country_name: country_name ?? this.country_name,
+      province_id: province_id ?? this.province_id,
+      province_name: province_name ?? this.province_name,
+      district_id: district_id ?? this.district_id,
+      district_name: district_name ?? this.district_name,
+      ward_id: ward_id ?? this.ward_id,
+      ward_name: ward_name ?? this.ward_name,
+      street: street ?? this.street,
+      address: address ?? this.address,
+      gender: gender ?? this.gender,
+      birthday: birthday ?? this.birthday,
+      phone: phone ?? this.phone,
     );
   }
 }

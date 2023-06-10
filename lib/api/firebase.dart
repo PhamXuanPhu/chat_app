@@ -1,13 +1,16 @@
 // ignore_for_file: unused_import
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:chat_app/blocs/setting/setting_bloc.dart';
 import 'package:chat_app/models/user.dart' as models;
 import 'package:chat_app/services/chat_id_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/user/user_bloc.dart';
@@ -20,10 +23,12 @@ import '../services/data_service.dart';
 class FirebaseAPI {
   static late FirebaseAuth auth;
   static late FirebaseFirestore firestore;
+  static late FirebaseStorage storage;
 
   static Future<void> init() async {
     auth = FirebaseAuth.instance;
     firestore = FirebaseFirestore.instance;
+    storage = FirebaseStorage.instance;
   }
 
   static Future<String> login(String email, String password) async {
@@ -114,13 +119,26 @@ class FirebaseAPI {
         'name': name,
         'email': email,
         'avatar':
-            'https://img.hoidap247.com/picture/question/20200508/large_1588936738888.jpg',
+            'https://firebasestorage.googleapis.com/v0/b/chatapp-f3d79.appspot.com/o/avatar%2FV1PjnMelV8jxzMjU8HUY.png?alt=media&token=https://firebasestorage.googleapis.com/v0/b/chatapp-f3d79.appspot.com/o/avatar%2FV1PjnMelV8jxzMjU8HUY.png?alt=media&token=7ae3674a-53df-4662-9580-a8b441c93047',
         'contact_array': FieldValue.arrayUnion(['0']),
         'request_array': FieldValue.arrayUnion(['0']),
         'send_array': FieldValue.arrayUnion(['0']),
         'mode': false,
         'language': Config.vnCode,
         'active_status': true,
+        'country_id': '',
+        'country_name': '',
+        'province_id': '',
+        'province_name': '',
+        'district_id': '',
+        'district_name': '',
+        'ward_id': '',
+        'ward_name': '',
+        'street': '',
+        'address': '',
+        'gender': '',
+        'birthday': '',
+        'phone': ''
       };
       docRef.set(data);
       return true;
@@ -523,14 +541,52 @@ class FirebaseAPI {
     try {
       Map<String, dynamic> data = {
         'name': user.name,
-        'email': user.email,
+        'avatar': user.avatar,
+        'country_id': user.country_id,
+        'country_name': user.country_name,
+        'province_id': user.province_id,
+        'province_name': user.province_name,
+        'district_id': user.district_id,
+        'district_name': user.district_name,
+        'ward_id': user.ward_id,
+        'ward_name': user.ward_name,
+        'street': user.street,
+        'address': user.address,
+        'gender': user.gender,
+        'birthday': user.birthday,
+        'phone': user.phone,
       };
       final docRef = firestore.collection(Config.users).doc(Config.user.id);
       docRef.update(data);
       return true;
     } on FirebaseAuthException catch (e) {
       return false;
+    }
+  }
+
+  static Future<String> updateAvatar(File file) async {
+    try {
+      String path = 'avatar/${Config.user.id}.png';
+      final ref = storage.ref().child(path);
+      UploadTask upload = ref.putFile(file);
+      var snapshot = await upload.whenComplete(() => null);
+      String urlDownload = await snapshot.ref.getDownloadURL();
+
+      return urlDownload;
+    } on FirebaseAuthException catch (e) {
       throw Exception(e);
+    }
+  }
+
+  static Future<bool> updateUserAvatar(String avatar) async {
+    try {
+      final docRef = firestore.collection(Config.users).doc(Config.user.id);
+      docRef.update({
+        'avatar': avatar,
+      });
+      return true;
+    } on FirebaseAuthException catch (e) {
+      return false;
     }
   }
 }

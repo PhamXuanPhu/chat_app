@@ -1,33 +1,29 @@
 import 'package:chat_app/widgets/my_sizedbox.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../models/select_item.dart';
-import '../services/toast_service.dart';
-
-class MyLookup extends StatefulWidget {
-  const MyLookup({
+class MyDatetimePicker extends StatefulWidget {
+  const MyDatetimePicker({
     super.key,
     required this.hintText,
-    required this.listItem,
     required this.selected,
     this.controller,
     this.validator,
-    this.selectItem,
+    this.datetime,
   });
 
   final String hintText;
-  final List<SelectItem> listItem;
   final String? Function(String)? validator;
-  final SelectItem? selectItem;
-  final Function(SelectItem) selected;
+  final DateTime? datetime;
+  final Function(DateTime) selected;
   final TextEditingController? controller;
 
   @override
-  State<MyLookup> createState() => MyLookupState();
+  State<MyDatetimePicker> createState() => MyDatetimePickerState();
 }
 
-class MyLookupState extends State<MyLookup> {
+class MyDatetimePickerState extends State<MyDatetimePicker> {
   TextEditingController _controller = TextEditingController();
 
   @override
@@ -39,10 +35,8 @@ class MyLookupState extends State<MyLookup> {
     if (mounted) {
       _controller.addListener(() => setState(() {}));
     }
-    if (widget.selectItem != null &&
-        widget.selectItem!.id.isNotEmpty &&
-        widget.selectItem!.name.isNotEmpty) {
-      _controller.text = widget.selectItem!.name;
+    if (widget.datetime != null) {
+      _controller.text = DateFormat('dd-MM-yyyy').format(widget.datetime!);
     }
   }
 
@@ -50,9 +44,7 @@ class MyLookupState extends State<MyLookup> {
   Widget build(BuildContext context) {
     return TextFormField(
       onTap: () async {
-        if (widget.listItem.isNotEmpty) {
-          showDialog(context);
-        }
+        show(context);
       },
       textAlignVertical: TextAlignVertical.center,
       controller: _controller,
@@ -75,7 +67,7 @@ class MyLookupState extends State<MyLookup> {
               ? null
               : IconButton(
                   onPressed: () {
-                    widget.selected(SelectItem());
+                    widget.selected(DateTime.now());
                     _controller.clear();
                   },
                   icon: Icon(
@@ -104,7 +96,7 @@ class MyLookupState extends State<MyLookup> {
     );
   }
 
-  void showDialog(BuildContext context) {
+  void show(BuildContext context) {
     showModalBottomSheet(
         backgroundColor: Colors.transparent,
         context: context,
@@ -150,31 +142,14 @@ class MyLookupState extends State<MyLookup> {
                 ),
                 height10(value: 20),
                 Expanded(
-                  child: ListView.separated(
-                    itemCount: widget.listItem.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {
-                          _controller.text = widget.listItem[index].name;
-                          widget.selected(widget.listItem[index].copyWith());
-                          Navigator.pop(context);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: Text(
-                            widget.listItem[index].name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return Divider(
-                        color: Theme.of(context).selectedRowColor,
-                      );
-                    },
-                  ),
+                  child: CupertinoDatePicker(
+                      initialDateTime: widget.datetime ?? DateTime.now(),
+                      mode: CupertinoDatePickerMode.date,
+                      onDateTimeChanged: (value) {
+                        widget.selected(value);
+                        _controller.text =
+                            DateFormat('dd-MM-yyyy').format(value);
+                      }),
                 ),
               ],
             ),

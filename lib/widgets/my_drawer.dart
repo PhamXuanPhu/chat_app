@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:chat_app/blocs/setting/setting_bloc.dart';
+import 'package:chat_app/models/user.dart';
 import 'package:chat_app/screens/setting/language_screen.dart';
 import 'package:chat_app/screens/setting/mode_screen.dart';
 import 'package:chat_app/screens/setting/notification_screen.dart';
@@ -26,151 +27,160 @@ class MyDrawer extends StatelessWidget {
   const MyDrawer({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    final bloc = BlocProvider.of<UserBloc>(context);
-    if (bloc.state.currentUser.id.isEmpty) {
-      bloc.add(const LoadCurrentUser());
+    final user = BlocProvider.of<UserBloc>(context);
+    final setting = BlocProvider.of<SettingBloc>(context);
+    if (user.state.currentUser.id.isEmpty) {
+      user.add(const LoadCurrentUser());
     }
 
     return Drawer(
       child: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(15),
-          child: BlocBuilder<UserBloc, UserState>(
-            bloc: bloc,
+          child: BlocBuilder<SettingBloc, SettingState>(
+            bloc: setting,
             builder: (context, state) {
-              if (state is UserLoaded) {
-                return Column(
-                  children: [
-                    Row(
-                      children: [
-                        SizedBox(
-                            height: 35,
-                            width: 35,
-                            child:
-                                avatarTemplate(url: state.currentUser.avatar)),
-                        width10(),
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Text(
-                                state.currentUser.name,
-                                style: const TextStyle(fontSize: 18),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+              return Column(
+                children: [
+                  BlocBuilder<UserBloc, UserState>(
+                    bloc: user,
+                    builder: (context, state) {
+                      if (state is UserLoaded) {
+                        return Row(
+                          children: [
+                            SizedBox(
+                                height: 35,
+                                width: 35,
+                                child: avatarTemplate(
+                                    url: state.currentUser.avatar)),
+                            width10(),
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Text(
+                                    state.currentUser.name,
+                                    style: const TextStyle(fontSize: 18),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                            iconButton(
+                                context: context,
+                                icon: Icons.settings,
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SettingScreen()),
+                                  );
+                                }),
+                          ],
+                        );
+                      } else {
+                        return Container();
+                      }
+                    },
+                  ),
+                  height10(value: 20),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ModeScreen()),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        icon(
+                          icon: Icons.dark_mode,
+                          backgroundColor:
+                              Theme.of(context).toggleableActiveColor,
+                          iconColor: Theme.of(context).selectedRowColor,
                         ),
-                        iconButton(
-                            context: context,
-                            icon: Icons.settings,
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SettingScreen()),
-                              );
-                            }),
+                        width10(),
+                        title(
+                            title: 'che_do'.tr(),
+                            value: state.theme ? 'toi'.tr() : 'sang'.tr()),
                       ],
                     ),
-                    height10(value: 20),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ModeScreen()),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          icon(
-                            icon: Icons.dark_mode,
+                  ),
+                  height10(value: 20),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ActiveStatusScreen()),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        icon(
+                            icon: Icons.radio_button_on,
                             backgroundColor:
-                                Theme.of(context).toggleableActiveColor,
-                            iconColor: Theme.of(context).selectedRowColor,
-                          ),
-                          width10(),
-                          title(
-                              title: 'che_do'.tr(),
-                              value: state.currentUser.mode
-                                  ? 'toi'.tr()
-                                  : 'sang'.tr()),
-                        ],
-                      ),
+                                const Color.fromRGBO(69, 213, 90, 1),
+                            iconColor: Colors.white),
+                        width10(),
+                        title(
+                            title: 'trang_thai_hoat_dong'.tr(),
+                            value:
+                                state.activeStatus ? 'bat'.tr() : 'tat'.tr()),
+                      ],
                     ),
-                    height10(value: 20),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ActiveStatusScreen()),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          icon(
-                              icon: Icons.radio_button_on,
-                              backgroundColor:
-                                  const Color.fromRGBO(69, 213, 90, 1),
-                              iconColor: Colors.white),
-                          width10(),
-                          title(
-                              title: 'trang_thai_hoat_dong'.tr(),
-                              value: state.currentUser.active_status
-                                  ? 'bat'.tr()
-                                  : 'tat'.tr()),
-                        ],
-                      ),
+                  ),
+                  // height10(value: 20),
+                  // InkWell(
+                  //   onTap: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //           builder: (context) => const NotificationScreen()),
+                  //     );
+                  //   },
+                  //   child: Row(
+                  //     children: [
+                  //       icon(
+                  //           icon: Icons.notifications,
+                  //           backgroundColor:
+                  //               const Color.fromRGBO(0, 200, 255, 1),
+                  //           iconColor: Colors.white),
+                  //       width10(),
+                  //       title(title: 'thong_bao'.tr(), value: 'bật'),
+                  //     ],
+                  //   ),
+                  // ),
+                  height10(value: 20),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LanguageScreen()),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        icon(
+                            icon: Icons.g_translate,
+                            backgroundColor: Colors.red,
+                            iconColor: Colors.white),
+                        width10(),
+                        title(
+                            title: 'ngon_ngu'.tr(),
+                            value: state.language == Config.enCode
+                                ? 'tieng_anh'.tr()
+                                : 'tieng_viet'.tr()),
+                      ],
                     ),
-                    height10(value: 20),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const NotificationScreen()),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          icon(
-                              icon: Icons.notifications,
-                              backgroundColor:
-                                  const Color.fromRGBO(0, 200, 255, 1),
-                              iconColor: Colors.white),
-                          width10(),
-                          title(title: 'thong_bao'.tr(), value: 'bật'),
-                        ],
-                      ),
-                    ),
-                    height10(value: 20),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LanguageScreen()),
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          icon(
-                              icon: Icons.g_translate,
-                              backgroundColor: Colors.red,
-                              iconColor: Colors.white),
-                          width10(),
-                          title(
-                              title: 'ngon_ngu'.tr(),
-                              value: state.currentUser.language == Config.enCode
-                                  ? 'tieng_anh'.tr()
-                                  : 'tieng_viet'.tr()),
-                        ],
-                      ),
-                    ),
-                    myButton('Logout', () async {
+                  ),
+                  height10(value: 20),
+                  InkWell(
+                    onTap: () async {
+                      Config.user = User();
                       await FirebaseAPI.signOut();
                       // ignore: use_build_context_synchronously
                       Navigator.pushReplacement(
@@ -178,12 +188,23 @@ class MyDrawer extends StatelessWidget {
                         MaterialPageRoute(
                             builder: (context) => const LoginScreen()),
                       );
-                    }),
-                  ],
-                );
-              } else {
-                return Container();
-              }
+                    },
+                    child: Row(
+                      children: [
+                        icon(
+                            icon: Icons.logout,
+                            backgroundColor:
+                                const Color.fromRGBO(0, 200, 255, 1),
+                            iconColor: Colors.white),
+                        width10(),
+                        Text(
+                          'dang_xuat'.tr(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
             },
           ),
         ),

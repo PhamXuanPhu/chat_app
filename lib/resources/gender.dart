@@ -9,4 +9,12 @@ class Gender {
     SelectItem(id: '1', name: 'nu'.tr()),
     SelectItem(id: '2', name: 'khac'.tr()),
   ];
+  static SelectItem? getGenderWithID(String id) {
+    if (id.isEmpty) return null;
+    var item = genders.firstWhere((item) => item.id == id);
+    if (item.id != '') {
+      return item;
+    }
+    return null;
+  }
 }

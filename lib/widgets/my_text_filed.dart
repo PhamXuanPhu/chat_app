@@ -55,7 +55,10 @@ class _MyTextFieldState extends State<MyTextField> {
       controller: _controller,
       readOnly: widget.readOnly,
       validator: (value) {
-        return widget.validator!(value!);
+        if (widget.validator != null) {
+          return widget.validator!(value!);
+        }
+        return null;
       },
       keyboardType: TextInputType.emailAddress,
       obscureText: widget.isPassword! ? enablePassword : false,

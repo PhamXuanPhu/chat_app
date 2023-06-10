@@ -10,7 +10,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blocs/setting/setting_bloc.dart';
 import '../../blocs/user/user_bloc.dart';
 import '../../widgets/my_sizedbox.dart';
 import '../user/update_info_screen.dart';
@@ -34,24 +33,6 @@ class SettingScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   height10(value: 20),
-                  Center(
-                    child: Column(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage:
-                              NetworkImage(state.currentUser.avatar),
-                          maxRadius: 45,
-                        ),
-                        height10(),
-                        Text(
-                          state.currentUser.name,
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ),
-                  height10(value: 15),
                   groupItem(text: 'thiet_lap'.tr()),
                   item(
                     icon: Icons.dark_mode,
@@ -79,19 +60,19 @@ class SettingScreen extends StatelessWidget {
                       );
                     },
                   ),
-                  item(
-                    icon: Icons.notifications,
-                    backgroundColor: const Color.fromRGBO(0, 200, 255, 1),
-                    iconColor: Colors.white,
-                    text: 'thong_bao'.tr(),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const NotificationScreen()),
-                      );
-                    },
-                  ),
+                  // item(
+                  //   icon: Icons.notifications,
+                  //   backgroundColor: const Color.fromRGBO(0, 200, 255, 1),
+                  //   iconColor: Colors.white,
+                  //   text: 'thong_bao'.tr(),
+                  //   onPressed: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //           builder: (context) => const NotificationScreen()),
+                  //     );
+                  //   },
+                  // ),
                   item(
                     icon: Icons.translate,
                     backgroundColor: Colors.red,
@@ -155,26 +136,14 @@ class SettingScreen extends StatelessWidget {
                     backgroundColor: Theme.of(context).toggleableActiveColor,
                     iconColor: Theme.of(context).selectedRowColor,
                     text: 'bao_loi'.tr(),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ModeScreen()),
-                      );
-                    },
+                    onPressed: () {},
                   ),
                   item(
                     icon: Icons.help,
                     backgroundColor: const Color.fromRGBO(69, 213, 90, 1),
                     iconColor: Colors.white,
                     text: 'yeu_cau_ho_tro'.tr(),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ModeScreen()),
-                      );
-                    },
+                    onPressed: () {},
                   ),
                   height10(value: 20)
                 ],

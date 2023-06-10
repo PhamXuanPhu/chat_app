@@ -15,6 +15,7 @@ import '../../services/from_to_service.dart';
 import '../../widgets/avatar_template.dart';
 import '../../widgets/message_itemtemplate.dart';
 import '../../widgets/my_sizedbox.dart';
+import '../user/user_info.dart';
 
 class ChatScreen extends StatelessWidget {
   static const id = 'chat_screen';
@@ -64,7 +65,14 @@ class ChatScreen extends StatelessWidget {
                   ),
                   InkWell(
                     child: const Icon(Icons.info),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UserInfo(userID: userTo.id),
+                        ),
+                      );
+                    },
                   )
                 ],
               );

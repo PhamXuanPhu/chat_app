@@ -11,7 +11,7 @@ class Address extends Equatable {
   String provinceName;
   String districtId;
   String districtName;
-  String wardtId;
+  String wardId;
   String wardName;
   // house number / street/ ward
   String street;
@@ -23,7 +23,7 @@ class Address extends Equatable {
     this.provinceName = '',
     this.districtId = '',
     this.districtName = '',
-    this.wardtId = '',
+    this.wardId = '',
     this.wardName = '',
     this.street = '',
     this.address = '',
@@ -37,7 +37,7 @@ class Address extends Equatable {
       'provinceName': provinceName,
       'districtId': districtId,
       'districtName': districtName,
-      'wardtId': wardtId,
+      'wardId': wardId,
       'wardName': wardName,
       'ward': street,
       'address': address,
@@ -52,7 +52,7 @@ class Address extends Equatable {
       provinceName: map['provinceName'] as String,
       districtId: map['districtId'] as String,
       districtName: map['districtName'] as String,
-      wardtId: map['wardtId'] as String,
+      wardId: map['wardId'] as String,
       wardName: map['wardName'] as String,
       street: map['ward'] as String,
       address: map['address'] as String,
@@ -70,7 +70,7 @@ class Address extends Equatable {
       districtName,
       street,
       address,
-      wardtId,
+      wardId,
       wardName,
     ];
   }

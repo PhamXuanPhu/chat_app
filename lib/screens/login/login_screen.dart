@@ -3,6 +3,7 @@
 import 'dart:ui';
 
 import 'package:chat_app/api/firebase.dart';
+import 'package:chat_app/blocs/user/user_bloc.dart';
 import 'package:chat_app/configs/config.dart';
 import 'package:chat_app/helper/data_helper.dart';
 import 'package:chat_app/resources/colors.dart';
@@ -134,6 +135,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       theme: Config.user.mode,
                       languageCode: Config.user.language,
                       activeStatus: Config.user.active_status));
+                  BlocProvider.of<UserBloc>(context)
+                      .add(const LoadCurrentUser());
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => const HomeScreen()),
@@ -215,7 +218,6 @@ class _LoginScreenState extends State<LoginScreen> {
               String register =
                   await FirebaseAPI.register(name, email, password);
               if (register.isEmpty) {
-                // ignore: use_build_context_synchronously
                 Toast.message(
                   context: context,
                   message: 'noti_dang_ky_thanh_cong'.tr(),
